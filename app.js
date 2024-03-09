@@ -12,4 +12,10 @@ app.get("/", (req, res) => {
   res.json("Working");
 });
 
+app.use((err, req, res, next) => {
+  let { success, statusCode = 500, message = "Something Went Wrong!" } = err;
+  res.status(statusCode).json({ success, statusCode, message });
+});
+
+
 module.exports = { app };
