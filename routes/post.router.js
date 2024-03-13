@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const wrapAsync = require("../utils/wrapAsync");
-const { verifyJWT } = require("../middlewares/Auth.middlewares");
+const { verifyJWT } = require("../middlewares/auth.middlewares");
 const {
   createPost,
   getPost,
@@ -13,11 +13,9 @@ const { upload } = require("../middlewares/Multer.middlewares");
 
 router.route("/").get(getAllPost);
 
-router.route("/").post(verifyJWT, wrapAsync(createPost));
+router.route("/").post(upload.single("postImage"), verifyJWT, wrapAsync(createPost));
 
-router
-  .route("/:postid")
-  .get(upload.single("postImage"), verifyJWT, wrapAsync(getPost));
+router.route("/:postid").get(verifyJWT, wrapAsync(getPost));
 
 router.route("/:postid").patch(verifyJWT, wrapAsync(updatePost));
 

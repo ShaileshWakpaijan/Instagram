@@ -13,6 +13,7 @@ const {
   validateRegisterUser,
   searchUsers,
   getAllLikedPost,
+  getUserPosts,
 } = require("../controllers/user.controllers");
 
 const { verifyJWT } = require("../middlewares/auth.middlewares");
@@ -37,6 +38,9 @@ router.route("/search").get(verifyJWT, wrapAsync(searchUsers));
 
 router.route("/:username").get(verifyJWT, wrapAsync(getUser));
 
+router.route("/:username/posts").get(verifyJWT, wrapAsync(getUserPosts));
+
 router.route("/:username/liked").get(verifyJWT, wrapAsync(getAllLikedPost));
+
 
 module.exports = router;

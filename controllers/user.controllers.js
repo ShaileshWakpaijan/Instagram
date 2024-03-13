@@ -244,12 +244,23 @@ const getUser = async (req, res, next) => {
       },
     },
     {
+      $lookup: {
+        from: "posts",
+        localField: "_id",
+        foreignField: "owner",
+        as: "posts",
+      },
+    },
+    {
       $addFields: {
         followersCount: {
           $size: "$followers",
         },
         followingsCount: {
           $size: "$followings",
+        },
+        postsCount: {
+          $size: "$posts",
         },
         isFollowing: {
           $cond: {
@@ -270,6 +281,7 @@ const getUser = async (req, res, next) => {
         profilePicture: 1,
         posts: 1,
         isFollowing: 1,
+        postsCount: 1,
       },
     },
   ]);
@@ -277,6 +289,89 @@ const getUser = async (req, res, next) => {
   user
     ? res.json(new ApiResponse(201, { user: user[0] }))
     : next(new ExpressError(404, "User Not Found"));
+};
+
+const getUserPosts = async (req, res, next) => {
+  const { username } = req.params;
+  let userPosts = await User.aggregate([
+    {
+      $match: { username },
+    },
+    {
+      $lookup: {
+        from: "posts",
+        localField: "_id",
+        foreignField: "owner",
+        as: "posts",
+        pipeline: [
+          {
+            $lookup: {
+              from: "users",
+              localField: "owner",
+              foreignField: "_id",
+              as: "owner",
+              pipeline: [
+                {
+                  $project: {
+                    username: 1,
+                    profilePicture: 1,
+                  },
+                },
+              ],
+            },
+          },
+          {
+            $lookup: {
+              from: "likes",
+              localField: "_id",
+              foreignField: "postId",
+              as: "likes",
+            },
+          },
+          {
+            $lookup: {
+              from: "comments",
+              localField: "_id",
+              foreignField: "postId",
+              as: "comments",
+            },
+          },
+          {
+            $addFields: {
+              owner: { $first: "$owner" },
+              likesCount: { $size: "$likes" },
+              commentCount: { $size: "$comments" },
+              isLiked: {
+                $cond: {
+                  if: {
+                    $in: [
+                      new mongoose.Types.ObjectId(req.user._id),
+                      "$likes.userId",
+                    ],
+                  },
+                  then: true,
+                  else: false,
+                },
+              },
+            },
+          },
+          {
+            $project: {
+              likes: 0,
+              comments: 0,
+            },
+          },
+        ],
+      },
+    },
+    {
+      $project: {
+        posts: 1,
+      },
+    },
+  ]);
+
+  res.json(new ApiResponse(200, userPosts[0]));
 };
 
 const getAllLikedPost = async (req, res, next) => {
@@ -364,5 +459,6 @@ module.exports = {
   searchUsers,
   updateUser,
   getUser,
+  getUserPosts,
   getAllLikedPost,
 };

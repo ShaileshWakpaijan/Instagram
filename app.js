@@ -5,6 +5,9 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const userRoute = require("./routes/user.router")
 const postRoute = require("./routes/post.router")
+const followRoute = require("./routes/follow.router")
+const likeRoute = require("./routes/like.router")
+const commentRoute = require("./routes/comment.router")
 
 app.use(cors({ origin: true, credentials: true }));
 app.use(bodyParser.json());
@@ -16,6 +19,9 @@ app.get("/", (req, res) => {
 
 app.use("/api/v1/user", userRoute)
 app.use("/api/v1/post", postRoute)
+app.use("/api/follow", followRoute);
+app.use("/api/like", likeRoute);
+app.use("/api/comment", commentRoute);
 
 app.use((err, req, res, next) => {
   let { success, statusCode = 500, message = "Something Went Wrong!" } = err;

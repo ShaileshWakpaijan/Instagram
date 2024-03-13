@@ -33,7 +33,7 @@ const getAllPost = async (req, res) => {
 };
 
 const createPost = async (req, res) => {
-  if (!req.body.content.length)
+  if (!req.body.caption.length)
     return next(new ExpressError(422, "Field should not be empty."));
   let postImage;
   if (req.file) {
@@ -42,7 +42,7 @@ const createPost = async (req, res) => {
   }
 
   let newPost = new Post({
-    caption: req.body.content,
+    caption: req.body.caption,
     image: postImage,
     owner: req.user._id,
   });
@@ -124,7 +124,7 @@ const getPost = async (req, res, next) => {
 
   !post.length
     ? next(new ExpressError(404, "Post Not Found."))
-    : res.json(new ApiResponse(200, post));
+    : res.json(new ApiResponse(200, post[0]));
 };
 
 const updatePost = async (req, res, next) => {
