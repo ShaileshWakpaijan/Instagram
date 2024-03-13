@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const Like = require("./like.model");
+const Comment = require("./comment.model");
 
 const postSchema = new mongoose.Schema(
   {
@@ -7,9 +9,11 @@ const postSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    content: {
+    caption: {
       type: String,
       required: true,
+      trim: true,
+      maxLength: 100,
     },
     image: {
       type: String,

@@ -19,9 +19,9 @@ app.get("/", (req, res) => {
 
 app.use("/api/v1/user", userRoute)
 app.use("/api/v1/post", postRoute)
-app.use("/api/follow", followRoute);
-app.use("/api/like", likeRoute);
-app.use("/api/comment", commentRoute);
+app.use("/api/v1/follow", followRoute);
+app.use("/api/v1/like", likeRoute);
+app.use("/api/v1/comment", commentRoute);
 
 app.use((err, req, res, next) => {
   let { success, statusCode = 500, message = "Something Went Wrong!" } = err;
