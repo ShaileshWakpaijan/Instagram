@@ -3,6 +3,7 @@ const ApiResponse = require("../utils/ApiResponse");
 const ExpressError = require("../utils/ExpressError");
 const mongoose = require("mongoose");
 const Follow = require("../models/follow.model");
+const pagination = require("../utils/pagination")
 
 const checkIsFollowing = async (req, res, next) => {
   let { username } = req.params;
@@ -156,26 +157,13 @@ const userFollowers = async (req, res, next) => {
   let page = req.query.page || 1;
   let limit = req.query.limit || 12;
 
-  let startIndex = (page - 1) * limit;
-  let endIndex = page * limit;
+  let { startIndex, endIndex, isNext, isPrevious } = pagination(
+    page,
+    limit,
+    user
+  );
 
-  let isNext;
-  let isPrevious;
-
-  if (endIndex < user.length) {
-    isNext = true;
-  } else {
-    isNext = false;
-  }
-
-  if (startIndex > 0) {
-    isPrevious = true;
-  } else {
-    isPrevious = false;
-  }
-
-  user = user.slice(startIndex, endIndex);
-
+  user = user.reverse().slice(startIndex, endIndex);
   res.json(new ApiResponse(200, { page, user, isNext, isPrevious }));
 };
 
@@ -246,26 +234,13 @@ const userFollowings = async (req, res, next) => {
   let page = req.query.page || 1;
   let limit = req.query.limit || 12;
 
-  let startIndex = (page - 1) * limit;
-  let endIndex = page * limit;
+  let { startIndex, endIndex, isNext, isPrevious } = pagination(
+    page,
+    limit,
+    user
+  );
 
-  let isNext;
-  let isPrevious;
-
-  if (endIndex < user.length) {
-    isNext = true;
-  } else {
-    isNext = false;
-  }
-
-  if (startIndex > 0) {
-    isPrevious = true;
-  } else {
-    isPrevious = false;
-  }
-
-  user = user.slice(startIndex, endIndex);
-
+  user = user.reverse().slice(startIndex, endIndex);
   res.json(new ApiResponse(200, { page, user, isNext, isPrevious }));
 };
 

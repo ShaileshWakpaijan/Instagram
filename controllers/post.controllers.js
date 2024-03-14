@@ -1,33 +1,122 @@
-const { default: mongoose } = require("mongoose");
+const mongoose = require("mongoose");
 const Post = require("../models/post.models");
+const Follow = require("../models/follow.model");
 const ApiResponse = require("../utils/ApiResponse");
 const ExpressError = require("../utils/ExpressError");
 const uploadOnCloudinary = require("../utils/cloudinary");
+const pagination = require("../utils/pagination");
 
-const getAllPost = async (req, res) => {
-  let allPost = await Post.find({});
+const getAllFolloedPost = async (req, res, next) => {
+  let allFollowedPosts = await Follow.aggregate([
+    {
+      $match: {
+        follower: new mongoose.Types.ObjectId("65e6e92f9faa7ca5b28c5385"),
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        followedUsers: {
+          $addToSet: "$following",
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: "posts",
+        localField: "followedUsers",
+        foreignField: "owner",
+        as: "posts",
+        pipeline: [
+          {
+            $lookup: {
+              from: "users",
+              localField: "owner",
+              foreignField: "_id",
+              as: "owner",
+              pipeline: [
+                {
+                  $project: {
+                    username: 1,
+                    profilePicture: 1,
+                  },
+                },
+              ],
+            },
+          },
+          {
+            $addFields: {
+              owner: {
+                $first: "$owner",
+              },
+            },
+          },
+        ],
+      },
+    },
+    {
+      $project: {
+        posts: 1,
+      },
+    },
+  ]);
+
+  if (!allFollowedPosts[0]) return res.redirect("/api/v1/post");
+
+  allFollowedPosts = allFollowedPosts[0].posts;
 
   let page = req.query.page || 1;
-  let limit = req.query.limit || 21;
-  let startIndex = (page - 1) * limit;
-  let endIndex = page * limit;
+  let limit = req.query.limit || 1;
 
-  let isNext;
-  let isPrevious;
+  let { startIndex, endIndex, isNext, isPrevious } = pagination(
+    page,
+    limit,
+    allFollowedPosts
+  );
 
-  if (endIndex < allPost.length) {
-    isNext = true;
-  } else {
-    isNext = false;
-  }
+  allFollowedPosts = allFollowedPosts.reverse().slice(startIndex, endIndex);
+  res.json(
+    new ApiResponse(200, { page, allFollowedPosts, isNext, isPrevious })
+  );
+};
 
-  if (startIndex > 0) {
-    isPrevious = true;
-  } else {
-    isPrevious = false;
-  }
+const getAllPost = async (req, res) => {
+  let allPost = await Post.aggregate([
+    {
+      $lookup: {
+        from: "users",
+        localField: "owner",
+        foreignField: "_id",
+        as: "owner",
+        pipeline: [
+          {
+            $project: {
+              username: 1,
+              profilePicture: 1,
+            },
+          },
+        ],
+      },
+    },
+    {
+      $addFields: {
+        owner: {
+          $first: "$owner",
+        },
+      },
+    },
+  ]);
 
-  allPost = allPost.slice(startIndex, endIndex);
+  let page = req.query.page || 1;
+  let limit = req.query.limit || 18;
+
+  let { startIndex, endIndex, isNext, isPrevious } = pagination(
+    page,
+    limit,
+    allPost
+  );
+
+  allPost = allPost.reverse().slice(startIndex, endIndex);
 
   res.json(new ApiResponse(200, { page, allPost, isNext, isPrevious }));
 };
@@ -168,4 +257,5 @@ module.exports = {
   updatePost,
   deletePost,
   getAllPost,
+  getAllFolloedPost,
 };

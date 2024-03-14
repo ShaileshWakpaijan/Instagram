@@ -3,6 +3,7 @@ const User = require("../models/user.models");
 const ApiResponse = require("../utils/ApiResponse");
 const ExpressError = require("../utils/ExpressError");
 const uploadOnCloudinary = require("../utils/cloudinary");
+const pagination = require("../utils/pagination");
 
 const generatAccessAndRefresshTokens = async (userId) => {
   const user = await User.findById(userId);
@@ -371,7 +372,20 @@ const getUserPosts = async (req, res, next) => {
     },
   ]);
 
-  res.json(new ApiResponse(200, userPosts[0]));
+  userPosts = userPosts[0].posts;
+
+  let page = req.query.page || 1;
+  let limit = req.query.limit || 12;
+
+  let { startIndex, endIndex, isNext, isPrevious } = pagination(
+    page,
+    limit,
+    userPosts
+  );
+
+  userPosts = userPosts.reverse().slice(startIndex, endIndex);
+
+  res.json(new ApiResponse(200, { page, userPosts, isNext, isPrevious }));
 };
 
 const getAllLikedPost = async (req, res, next) => {

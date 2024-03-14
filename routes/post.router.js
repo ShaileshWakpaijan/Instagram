@@ -8,12 +8,17 @@ const {
   updatePost,
   deletePost,
   getAllPost,
+  getAllFolloedPost,
 } = require("../controllers/post.controllers");
 const { upload } = require("../middlewares/Multer.middlewares");
 
-router.route("/").get(getAllPost);
+router.route("/").get(verifyJWT, wrapAsync(getAllPost));
 
-router.route("/").post(upload.single("postImage"), verifyJWT, wrapAsync(createPost));
+router.route("/home").get( wrapAsync(getAllFolloedPost));
+
+router
+  .route("/")
+  .post(upload.single("postImage"), verifyJWT, wrapAsync(createPost));
 
 router.route("/:postid").get(verifyJWT, wrapAsync(getPost));
 

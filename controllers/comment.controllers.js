@@ -3,6 +3,7 @@ const Comment = require("../models/comment.model");
 const Post = require("../models/post.models");
 const ApiResponse = require("../utils/ApiResponse");
 const ExpressError = require("../utils/ExpressError");
+const pagination = require("../utils/pagination")
 
 const postComment = async (req, res, next) => {
   let post = await Post.findById(req.params.postid);
@@ -74,25 +75,16 @@ const getPostComments = async (req, res, next) => {
 
   let page = req.query.page || 1;
   let limit = req.query.limit || 15;
-  let startIndex = (page - 1) * limit;
-  let endIndex = page * limit;
-  let isNext;
-  let isPrevious;
 
-  if (endIndex < allComments.length) {
-    isNext = true;
-  } else {
-    isNext = false;
-  }
+  let { startIndex, endIndex, isNext, isPrevious } = pagination(
+    page,
+    limit,
+    allComments
+  );
 
-  if (startIndex > 0) {
-    isPrevious = true;
-  } else {
-    isPrevious = false;
-  }
+  allComments = allPost.reverse().slice(startIndex, endIndex);
 
-  allComments = allComments.slice(startIndex, endIndex);
-  res.json(new ApiResponse(200, { page, isNext, isPrevious, allComments }));
+  res.json(new ApiResponse(200, { page, allPost, isNext, isPrevious }));
 };
 
 module.exports = {
