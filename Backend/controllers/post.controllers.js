@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const Post = require("../models/post.models");
+const Post = require("../models/post.model");
 const Follow = require("../models/follow.model");
 const ApiResponse = require("../utils/ApiResponse");
 const ExpressError = require("../utils/ExpressError");
@@ -38,6 +38,14 @@ const getAllFolloedPost = async (req, res, next) => {
           },
           {
             $lookup: {
+              from: "saves",
+              localField: "_id",
+              foreignField: "postId",
+              as: "saves",
+            },
+          },
+          {
+            $lookup: {
               from: "comments",
               localField: "_id",
               foreignField: "postId",
@@ -64,6 +72,7 @@ const getAllFolloedPost = async (req, res, next) => {
             $addFields: {
               owner: { $first: "$owner" },
               likesCount: { $size: "$likes" },
+              savesCount: { $size: "$saves" },
               commentCount: { $size: "$comments" },
               isLiked: {
                 $cond: {
@@ -77,11 +86,24 @@ const getAllFolloedPost = async (req, res, next) => {
                   else: false,
                 },
               },
+              isSaved: {
+                $cond: {
+                  if: {
+                    $in: [
+                      new mongoose.Types.ObjectId(req.user._id),
+                      "$saves.userId",
+                    ],
+                  },
+                  then: true,
+                  else: false,
+                },
+              },
             },
           },
           {
             $project: {
               likes: 0,
+              saves: 0,
               comments: 0,
             },
           },
@@ -94,8 +116,6 @@ const getAllFolloedPost = async (req, res, next) => {
       },
     },
   ]);
-
-  // if (!allFollowedPosts[0]) return res.redirect("/api/v1/post");
 
   allFollowedPosts = allFollowedPosts[0].posts;
 
@@ -144,6 +164,14 @@ const getAllPost = async (req, res) => {
     },
     {
       $lookup: {
+        from: "saves",
+        localField: "_id",
+        foreignField: "postId",
+        as: "saves",
+      },
+    },
+    {
+      $lookup: {
         from: "comments",
         localField: "_id",
         foreignField: "postId",
@@ -154,6 +182,9 @@ const getAllPost = async (req, res) => {
       $addFields: {
         likesCount: {
           $size: "$likes",
+        },
+        savesCount: {
+          $size: "$saves",
         },
         commentCount: {
           $size: "$comments",
@@ -170,6 +201,15 @@ const getAllPost = async (req, res) => {
             else: false,
           },
         },
+        isSaved: {
+          $cond: {
+            if: {
+              $in: [new mongoose.Types.ObjectId(req.user._id), "$saves.userId"],
+            },
+            then: true,
+            else: false,
+          },
+        },
         owner: {
           $first: "$owner",
         },
@@ -178,7 +218,8 @@ const getAllPost = async (req, res) => {
     {
       $project: {
         comments: 0,
-        likes: 0
+        likes: 0,
+        saves: 0
       }
     }
   ]);
@@ -251,6 +292,14 @@ const getPost = async (req, res, next) => {
     },
     {
       $lookup: {
+        from: "saves",
+        localField: "_id",
+        foreignField: "postId",
+        as: "saves",
+      },
+    },
+    {
+      $lookup: {
         from: "comments",
         localField: "_id",
         foreignField: "postId",
@@ -261,6 +310,9 @@ const getPost = async (req, res, next) => {
       $addFields: {
         likesCount: {
           $size: "$likes",
+        },
+        savesCount: {
+          $size: "$saves",
         },
         commentCount: {
           $size: "$comments",
@@ -277,11 +329,21 @@ const getPost = async (req, res, next) => {
             else: false,
           },
         },
+        isSaved: {
+          $cond: {
+            if: {
+              $in: [new mongoose.Types.ObjectId(req.user._id), "$saves.userId"],
+            },
+            then: true,
+            else: false,
+          },
+        },
       },
     },
     {
       $project: {
         likes: 0,
+        saves: 0,
         comments: 0,
       },
     },

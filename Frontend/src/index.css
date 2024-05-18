@@ -14,12 +14,12 @@
     color: var(--primary-color)
 }
 
-.scrollbar::-webkit-scrollbar {
+*::-webkit-scrollbar {
     width: 5px;
     background-color: black;
     border-radius: 50px;
 }
 
-.scrollbar::-webkit-scrollbar-thumb {
+*::-webkit-scrollbar-thumb {
     background-color: #1e2225;
 }

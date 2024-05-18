@@ -29,7 +29,7 @@ const ProfileInfo = ({ user, isItMe }) => {
 
         {/* Responsive */}
 
-        <div className=" hidden sm:flex items-center bg-black">
+        <div className=" hidden sm:flex items-center bg-black justify-center">
           <div className=" flex px-4 py-20 ">
             <div
               id="prof-img"

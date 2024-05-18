@@ -12,7 +12,8 @@ import {
   PostIndividual,
   FollowList,
   Comment,
-  PostUpload
+  PostUpload,
+  PostSaved
 
 } from "../pages/index";
 import ProfileSetup from "../pages/ProfileSetup";
@@ -27,6 +28,7 @@ const Router = () => {
         <Route element={<ProtectedRoutes isAuthenticated={isAuthenticated} />}>
           <Route path="/profile/:username" element={<Profile />}>
             <Route path="/profile/:username/feed" element={<ProfileFeed />} />
+            <Route path="/profile/:username/saved" element={<PostSaved />} />
           </Route>
           <Route path="/profile/:username/followers" element={<FollowList />} />
           <Route path="/profile/:username/following" element={<FollowList />} />

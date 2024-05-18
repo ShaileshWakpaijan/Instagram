@@ -47,7 +47,7 @@ const ProfileFollowSection = ({ user, isItMe }) => {
               {!loading && (checkIsFollowing ? "Following" : "Follow")}
             </button>
           )}
-          <button className=" bg-root py-[.3rem]  w-24 sm:w-28 text-sm  font-bold rounded-md">
+          <button className=" bg-root py-[.3rem]  w-24 sm:w-24 text-sm  font-bold rounded-md">
             Message
           </button>
         </div>

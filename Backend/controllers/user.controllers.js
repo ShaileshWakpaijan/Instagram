@@ -354,6 +354,14 @@ const getUserPosts = async (req, res, next) => {
           },
           {
             $lookup: {
+              from: "saves",
+              localField: "_id",
+              foreignField: "postId",
+              as: "saves",
+            },
+          },
+          {
+            $lookup: {
               from: "comments",
               localField: "_id",
               foreignField: "postId",
@@ -371,6 +379,18 @@ const getUserPosts = async (req, res, next) => {
                     $in: [
                       new mongoose.Types.ObjectId(req.user._id),
                       "$likes.userId",
+                    ],
+                  },
+                  then: true,
+                  else: false,
+                },
+              },
+              isSaved: {
+                $cond: {
+                  if: {
+                    $in: [
+                      new mongoose.Types.ObjectId(req.user._id),
+                      "$saves.userId",
                     ],
                   },
                   then: true,
@@ -462,6 +482,8 @@ const getAllLikedPost = async (req, res, next) => {
     },
   ]);
 
+  likedPosts = likedPosts[0].likedPosts
+
   let page = req.query.page || 1;
   let limit = req.query.limit || 5;
   let startIndex = (page - 1) * limit;
@@ -487,6 +509,84 @@ const getAllLikedPost = async (req, res, next) => {
   res.json(new ApiResponse(200, { page, isNext, isPrevious, likedPosts }));
 };
 
+const getAllSavedPost = async (req, res, next) => {
+  let savedPosts = await User.aggregate([
+    {
+      $match: {
+        _id: new mongoose.Types.ObjectId(req.user._id),
+      },
+    },
+    {
+      $lookup: {
+        from: "saves",
+        localField: "_id",
+        foreignField: "userId",
+        as: "savedPosts",
+        pipeline: [
+          {
+            $lookup: {
+              from: "posts",
+              localField: "postId",
+              foreignField: "_id",
+              as: "post",
+              pipeline: [
+                {
+                  $project: {
+                    image: 1,
+                  },
+                },
+              ],
+            },
+          },
+          {
+            $addFields: {
+              post: {
+                $first: "$post",
+              },
+            },
+          },
+          {
+            $project: {
+              post: 1,
+            },
+          },
+        ],
+      },
+    },
+    {
+      $project: {
+        savedPosts: 1,
+      },
+    },
+  ]);
+
+  savedPosts = savedPosts[0].savedPosts
+
+  let page = req.query.page || 1;
+  let limit = req.query.limit || 5;
+  let startIndex = (page - 1) * limit;
+  let endIndex = page * limit;
+
+  let isNext;
+  let isPrevious;
+
+  if (endIndex < savedPosts.length) {
+    isNext = true;
+  } else {
+    isNext = false;
+  }
+
+  if (startIndex > 0) {
+    isPrevious = true;
+  } else {
+    isPrevious = false;
+  }
+
+  savedPosts = savedPosts.slice(startIndex, endIndex);
+
+  res.json(new ApiResponse(200, { page, isNext, isPrevious, savedPosts }));
+};
+
 module.exports = {
   validateRegisterUser,
   registerUser,
@@ -498,4 +598,5 @@ module.exports = {
   getUser,
   getUserPosts,
   getAllLikedPost,
+  getAllSavedPost
 };

@@ -6,6 +6,7 @@ const Post = ({ postDetails }) => {
   const [profilePicture, setProfilePicture] = useState("");
   const [likesCount, setLikesCount] = useState(0);
   const [isLiked, setIsLiked] = useState(null);
+  const [isSaved, setIsSaved] = useState(null);
 
   const handleLike = async () => {
     try {
@@ -23,6 +24,22 @@ const Post = ({ postDetails }) => {
     }
   };
 
+  const handleSave = async () => {
+    try {
+      if (!isSaved) {
+        setIsSaved((prev) => !prev);
+        await axios.post(`/save/${postDetails._id}/save`);
+        console.log("saved")
+      } else {
+        setIsSaved((prev) => !prev);
+        await axios.delete(`/save/${postDetails._id}/save`);
+        console.log("unsaved")
+      }
+    } catch (error) {
+      console.log("Error saving/unsaving post:", error);
+    }
+  };
+
   useEffect(() => {
     if (postDetails) {
       setProfilePicture(
@@ -30,6 +47,7 @@ const Post = ({ postDetails }) => {
       );
       setLikesCount(postDetails.likesCount);
       setIsLiked(postDetails.isLiked);
+      setIsSaved(postDetails.isSaved);
     }
   }, [postDetails]);
 
@@ -52,10 +70,7 @@ const Post = ({ postDetails }) => {
           </Link>
         </div>
         <div className="home-post min-h-60 bg-zinc-800 flex flex-col justify-center">
-          <img
-            src={postDetails.image}
-            className="h-full"
-          />
+          <img src={postDetails.image} className="h-full" />
         </div>
         <div className=" flex justify-between px-4 py-4">
           <div className="flex gap-3">
@@ -71,7 +86,12 @@ const Post = ({ postDetails }) => {
             <img className=" w-6 h-6" src="/Icons/send.png" alt="" />
           </div>
           <div className="right">
-            <img className=" w-6 h-6" src="/Icons/save.png" alt="" />
+            <img
+              className=" w-6 h-6"
+              src={`/Icons/${isSaved ? "saved" : "save"}.png`}
+              alt=""
+              onClick={handleSave}
+            />
           </div>
         </div>
         <div className="post-info px-3">

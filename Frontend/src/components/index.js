@@ -14,6 +14,7 @@ import ProfileSetup from "./auth/ProfileSetup"
 import FollowList from "./Profile/FollowList"
 import Comment from "./Comments/Comment"
 import PostUpload from "./Posts/PostUpload";
+import PostSaved from "./Posts/PostSaved";
 
 export {
   Input,
@@ -32,5 +33,6 @@ export {
   FollowList,
   Comment,
   PostUpload,
+  PostSaved,
   
 };

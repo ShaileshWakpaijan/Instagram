@@ -3,6 +3,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const PostGrid = ({ userPosts }) => {
+
   return userPosts && userPosts.length ? (
     <div id="all-posts" className=" grid grid-cols-3 gap-1 ">
       {userPosts &&

@@ -1,6 +1,6 @@
 const { default: mongoose } = require("mongoose");
 const Comment = require("../models/comment.model");
-const Post = require("../models/post.models");
+const Post = require("../models/post.model");
 const ApiResponse = require("../utils/ApiResponse");
 const ExpressError = require("../utils/ExpressError");
 const pagination = require("../utils/pagination")

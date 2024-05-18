@@ -10,6 +10,7 @@ import PostIndividual from "./PostIndividual";
 import FollowList from "./FollowList";
 import Comment from "./Comment";
 import PostUpload from "./PostUpload";
+import PostSaved from "./PostSaved"
 
 export {
   Login,
@@ -24,5 +25,6 @@ export {
   FollowList,
   Comment,
   PostUpload,
+  PostSaved,
   
 };

@@ -1,4 +1,5 @@
 import {
+  RiBookmark2Fill,
   RiLayoutGrid2Line,
   RiScrollToBottomLine,
   RiSettingsLine,
@@ -7,12 +8,7 @@ import React, { useEffect } from "react";
 import ProfileInfo from "./ProfileInfo";
 import ProfileFollowInfo from "./ProfileFollowInfo";
 import PostGrid from "../Posts/PostGrid";
-import {
-  Link,
-  Outlet,
-  useLocation,
-  useParams,
-} from "react-router-dom";
+import { Link, Outlet, useLocation, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUser, fetchUserPosts } from "../../store/actions/userAction";
 import { removeUser } from "../../store/reducers/userSlice";
@@ -63,20 +59,29 @@ const Profile = () => {
         >
           <Link
             to={`/profile/${user.username}`}
-            className=" w-1/2 flex justify-center items-center"
+            className=" w-1/3 flex justify-center items-center"
           >
             <RiLayoutGrid2Line size={27} />
           </Link>
 
           <Link
             to={`/profile/${user.username}/feed`}
-            className=" w-1/2 flex justify-center items-center"
+            className=" w-1/3 flex justify-center items-center"
           >
             <RiScrollToBottomLine size={27} />
           </Link>
+
+          {isItMe && <Link
+            to={`/profile/${user.username}/saved`}
+            className=" w-1/3 flex justify-center items-center"
+          >
+            <img className=" w-5 h-5" src="/Icons/saved.png" alt="" />
+          </Link>}
         </div>
         <div className="">
-          {pathname !== "feed" && <PostGrid userPosts={userPosts} />}
+          {pathname !== "feed" && pathname !== "saved" && (
+            <PostGrid userPosts={userPosts} />
+          )}
           <Outlet />
         </div>
       </div>
