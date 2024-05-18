@@ -34,3 +34,12 @@ export const fetchUserPosts = (username) => async (dispatch) => {
     console.log(err);
   }
 };
+
+export const userUpdate = (username) => async (dispatch) => {
+  let { data } = await axios.get(`/user/${username}`);
+  try {
+    dispatch(setUserDetails(data.data.user));
+  } catch (err) {
+    console.log(err);
+  }
+};

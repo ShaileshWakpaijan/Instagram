@@ -1,12 +1,4 @@
-import {
-  RiProfileFill,
-  RiSettingsLine,
-  RiUser2Fill,
-  RiUser3Fill,
-  RiUser3Line,
-  RiUser4Fill,
-  RiUser5Fill,
-} from "@remixicon/react";
+import { RiSettingsLine, RiUser3Fill } from "@remixicon/react";
 import React from "react";
 import { useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";

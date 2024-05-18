@@ -163,16 +163,31 @@ const logoutUser = async (req, res) => {
 };
 
 const updateUser = async (req, res, next) => {
-  if (req.file) {
-    const response = await uploadOnCloudinary(req.file.path);
-    req.body.profilePicture = response.url;
-  }
+  if (!req.body.username)
+    return next(new ExpressError(400, "Username should not be empty."));
 
   let user = await User.findOne({ username: req.params.username });
   if (!user._id.equals(req.user._id)) {
     next(new ExpressError(403, "You cannot edit others profile."));
   }
-  let loggedInUser = await User.findByIdAndUpdate(req.user._id, req.body);
+
+  if (req.body.username !== req.params.username) {
+    let user = await User.findOne({ username: req.body.username });
+    if (user) {
+      next(new ExpressError(409, "Username already exists."));
+    }
+  }
+  
+  if (req.file) {
+    const response = await uploadOnCloudinary(req.file.path);
+    req.body.profilePicture = response.url;
+  }
+
+  let loggedInUser = await User.findByIdAndUpdate(
+    req.user._id,
+    req.body
+  ).select("-password -refreshToken");
+
   res
     .status(200)
     .json(
@@ -225,7 +240,6 @@ const searchUsers = async (req, res, next) => {
 
     res.json(new ApiResponse(200, users));
   } catch (error) {
-    console.error("Error searching for users:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -289,7 +303,6 @@ const getUser = async (req, res, next) => {
         followingsCount: 1,
         followersCount: 1,
         profilePicture: 1,
-        posts: 1,
         isFollowing: 1,
         postsCount: 1,
       },
@@ -303,6 +316,7 @@ const getUser = async (req, res, next) => {
 
 const getUserPosts = async (req, res, next) => {
   const { username } = req.params;
+
   let userPosts = await User.aggregate([
     {
       $match: { username },

@@ -35,7 +35,7 @@ const Post = ({ postDetails }) => {
 
   return (
     postDetails && (
-      <div className="post-wrapper pb-4">
+      <div className="post-wrapper pb-4 sm:w-4/5 mx-auto">
         <div className="post-top py-3 px-3">
           <Link
             to={`/profile/${postDetails.owner.username}`}

@@ -1,6 +1,5 @@
 import React from "react";
-import Router from "./utils/Router";
-import { Navbar } from "./components/index";
+import Router from "./utils/Router"
 
 const App = () => {
   return <div className="w-full font-[poppins] min-h-screen text-white ">

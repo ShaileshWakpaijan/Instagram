@@ -52,6 +52,12 @@ const Comment = () => {
         <div className=" min-h-screen bg-black text-white pb-12 sm:pb-0">
           <PageHeading heading={"Comments"} />
 
+          {!allComments.length && !newComment.length && (
+            <p className=" text-center py-5 text-neutral-400">
+              No comments yet.
+            </p>
+          )}
+
           <div className=" px-2 py-5 flex flex-col gap-5 pb-28">
             {newComment.map((c, index) => (
               <OneComment key={index} comment={c} />

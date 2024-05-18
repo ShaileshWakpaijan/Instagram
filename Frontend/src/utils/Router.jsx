@@ -11,7 +11,9 @@ import {
   Signup,
   PostIndividual,
   FollowList,
-  Comment
+  Comment,
+  PostUpload
+
 } from "../pages/index";
 import ProfileSetup from "../pages/ProfileSetup";
 import ProtectedRoutes from "./ProtectedRoutes";
@@ -30,6 +32,7 @@ const Router = () => {
           <Route path="/profile/:username/following" element={<FollowList />} />
           <Route path="/profile/settings" element={<Settings />} />
           <Route path="/profile/settings/edit" element={<EditPage />} />
+          <Route path="/post/upload" element={<PostUpload />} />
           <Route path="/post/:postid" element={<PostIndividual />} />
           <Route path="/post/:postid/comment" element={<Comment />} />
           <Route path="/search" element={<Search />} />

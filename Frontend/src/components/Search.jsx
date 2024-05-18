@@ -51,7 +51,7 @@ const Search = () => {
         </div>
         <button onClick={()=> navigate(-1)} className=" text-xs font-bold px-2">Cancle</button>
       </div>
-      <div className="p-4 flex flex-col gap-4">
+      <div className="p-4 flex flex-col gap-4 sm:h-[85vh] overflow-auto scrollbar">
         {users.map((user, index) => {
           return <UserListItem user={user} fromSearch={true} key={index} />;
         })}

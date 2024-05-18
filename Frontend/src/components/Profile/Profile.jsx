@@ -11,7 +11,6 @@ import {
   Link,
   Outlet,
   useLocation,
-  useNavigate,
   useParams,
 } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
