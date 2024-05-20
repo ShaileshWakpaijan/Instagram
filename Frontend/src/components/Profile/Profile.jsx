@@ -1,5 +1,5 @@
 import {
-  RiBookmark2Fill,
+  RiArrowLeftSLine,
   RiLayoutGrid2Line,
   RiScrollToBottomLine,
   RiSettingsLine,
@@ -8,7 +8,7 @@ import React, { useEffect } from "react";
 import ProfileInfo from "./ProfileInfo";
 import ProfileFollowInfo from "./ProfileFollowInfo";
 import PostGrid from "../Posts/PostGrid";
-import { Link, Outlet, useLocation, useParams } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUser, fetchUserPosts } from "../../store/actions/userAction";
 import { removeUser } from "../../store/reducers/userSlice";
@@ -19,6 +19,7 @@ const Profile = () => {
   pathname = pathname[pathname.length - 1];
   const params = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate()
 
   const { user, userDetails, userPosts } = useSelector((state) => state.user);
 
@@ -41,9 +42,13 @@ const Profile = () => {
       <div className=" sm:w-[72vw] lg:w-[48vw] sm:mx-auto">
         <div className=" sticky z-30 top-0 w-full bg-black py-2 text-center border-b-[1px] border-neutral-600 sm:hidden">
           <div className=" top-[50%] -translate-y-[50%] left-3 absolute">
+          {isItMe ? (
             <Link to={"/profile/settings"}>
               <RiSettingsLine />
             </Link>
+          ) : (
+            <RiArrowLeftSLine onClick={() => navigate(-1)} />
+          )}
           </div>
           <span className="">{user.username}</span>
         </div>

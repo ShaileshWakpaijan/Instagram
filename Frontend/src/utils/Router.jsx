@@ -13,7 +13,8 @@ import {
   FollowList,
   Comment,
   PostUpload,
-  PostSaved
+  PostSaved,
+  Home
 
 } from "../pages/index";
 import ProfileSetup from "../pages/ProfileSetup";
@@ -26,6 +27,7 @@ const Router = () => {
     <div>
       <Routes>
         <Route element={<ProtectedRoutes isAuthenticated={isAuthenticated} />}>
+          <Route path="/home" element={<Home />} />
           <Route path="/profile/:username" element={<Profile />}>
             <Route path="/profile/:username/feed" element={<ProfileFeed />} />
             <Route path="/profile/:username/saved" element={<PostSaved />} />

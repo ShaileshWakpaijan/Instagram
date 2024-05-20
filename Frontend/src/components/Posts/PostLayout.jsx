@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import axios from "../../utils/axios";
+import { RiMore2Fill } from "@remixicon/react";
 
 const Post = ({ postDetails }) => {
   const [profilePicture, setProfilePicture] = useState("");
@@ -29,11 +30,11 @@ const Post = ({ postDetails }) => {
       if (!isSaved) {
         setIsSaved((prev) => !prev);
         await axios.post(`/save/${postDetails._id}/save`);
-        console.log("saved")
+        console.log("saved");
       } else {
         setIsSaved((prev) => !prev);
         await axios.delete(`/save/${postDetails._id}/save`);
-        console.log("unsaved")
+        console.log("unsaved");
       }
     } catch (error) {
       console.log("Error saving/unsaving post:", error);
@@ -54,7 +55,7 @@ const Post = ({ postDetails }) => {
   return (
     postDetails && (
       <div className="post-wrapper pb-4 sm:w-4/5 mx-auto">
-        <div className="post-top py-3 px-3">
+        <div className="post-top py-3 px-3 flex items-center justify-between">
           <Link
             to={`/profile/${postDetails.owner.username}`}
             className=" flex items-center gap-4 w-fit"
@@ -68,6 +69,7 @@ const Post = ({ postDetails }) => {
               {postDetails.owner.username}
             </div>
           </Link>
+          <RiMore2Fill />
         </div>
         <div className="home-post min-h-60 bg-zinc-800 flex flex-col justify-center">
           <img src={postDetails.image} className="h-full" />

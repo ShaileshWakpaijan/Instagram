@@ -15,6 +15,7 @@ import FollowList from "./Profile/FollowList"
 import Comment from "./Comments/Comment"
 import PostUpload from "./Posts/PostUpload";
 import PostSaved from "./Posts/PostSaved";
+import Home from "./Home"
 
 export {
   Input,
@@ -34,5 +35,6 @@ export {
   Comment,
   PostUpload,
   PostSaved,
+  Home,
   
 };
