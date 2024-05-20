@@ -30,7 +30,7 @@ const Profile = () => {
     dispatch(fetchUserPosts(params.username));
 
     return () => dispatch(removeUser());
-  }, []);
+  }, [isItMe]);
 
   return user ? (
     <div

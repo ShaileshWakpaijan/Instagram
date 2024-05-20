@@ -110,9 +110,8 @@ const Post = ({ postDetails }) => {
                 ? postDetails.commentCount === 1
                   ? "View 1 comment"
                   : `View all ${postDetails.commentCount} comments`
-                : ""}
+                : "No comments"}
             </Link>
-            No comments
           </div>
           <span className=" text-xs text-neutral-400">
             {postDetails.createdAt}

@@ -1,5 +1,5 @@
 import React from "react";
-import { PostSaved as PostSavedComponent, Navbar } from "../components/index";
+import { PostSaved as PostSavedComponent } from "../components/index";
 
 const PostSaved = () => {
   return (

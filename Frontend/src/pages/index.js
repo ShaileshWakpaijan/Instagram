@@ -12,6 +12,7 @@ import Comment from "./Comment";
 import PostUpload from "./PostUpload";
 import PostSaved from "./PostSaved"
 import Home from "./Home"
+import PostLiked from "./PostLiked";
 
 export {
   Login,
@@ -28,5 +29,6 @@ export {
   PostUpload,
   PostSaved,
   Home,
+  PostLiked,
   
 };

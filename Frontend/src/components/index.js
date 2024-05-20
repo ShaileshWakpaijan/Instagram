@@ -16,6 +16,7 @@ import Comment from "./Comments/Comment"
 import PostUpload from "./Posts/PostUpload";
 import PostSaved from "./Posts/PostSaved";
 import Home from "./Home"
+import PostLiked from "./Posts/PostLiked"
 
 export {
   Input,
@@ -36,5 +37,6 @@ export {
   PostUpload,
   PostSaved,
   Home,
+  PostLiked,
   
 };
