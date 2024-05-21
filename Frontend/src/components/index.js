@@ -17,6 +17,7 @@ import PostUpload from "./Posts/PostUpload";
 import PostSaved from "./Posts/PostSaved";
 import Home from "./Home"
 import PostLiked from "./Posts/PostLiked"
+import AccountDelete from "./AccountDelete"
 
 export {
   Input,
@@ -38,5 +39,6 @@ export {
   PostSaved,
   Home,
   PostLiked,
+  AccountDelete
   
 };

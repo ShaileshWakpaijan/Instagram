@@ -1,13 +1,36 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import axios from "../../utils/axios";
 import { RiMore2Fill } from "@remixicon/react";
+import Modal from "../Modal";
+import { useSelector } from "react-redux";
+import useFollow from "../../hooks/useFollow";
 
 const Post = ({ postDetails }) => {
   const [profilePicture, setProfilePicture] = useState("");
   const [likesCount, setLikesCount] = useState(0);
   const [isLiked, setIsLiked] = useState(null);
   const [isSaved, setIsSaved] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [clickedOn, setClickedOn] = useState("");
+  const [checkIsFollowing, setCheckIsFollowing] = useState(false);
+  const navigate = useNavigate();
+
+  const useCheckFollowing = async () => {
+    try {
+      const { data } = await axios.get(
+        `/follow/${postDetails?.owner.username}/isfollowing`
+      );
+      setCheckIsFollowing(data.data.isFollowing);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const { user, userDetails, userPosts } = useSelector((state) => state.user);
+
+  const amIOwner =
+    postDetails?.owner.username === userDetails.username ? true : false;
 
   const handleLike = async () => {
     try {
@@ -41,6 +64,29 @@ const Post = ({ postDetails }) => {
     }
   };
 
+  const handleUnfollow = async () => {
+    setClickedOn("");
+    const follow = await useFollow(
+      postDetails.owner.username,
+      checkIsFollowing,
+      setCheckIsFollowing
+    );
+    console.log(follow);
+  };
+
+  const handleDeletePost = async () => {
+    setClickedOn("");
+    try {
+      await axios.delete(`/post/${postDetails?._id}`);
+    } catch (error) {
+      console.log(error);
+    }
+    navigate(-1)
+  };
+
+  if (clickedOn === "Unfollow" || clickedOn === "Follow") handleUnfollow();
+  if (clickedOn === "Delete") handleDeletePost();
+
   useEffect(() => {
     if (postDetails) {
       setProfilePicture(
@@ -49,6 +95,7 @@ const Post = ({ postDetails }) => {
       setLikesCount(postDetails.likesCount);
       setIsLiked(postDetails.isLiked);
       setIsSaved(postDetails.isSaved);
+      useCheckFollowing();
     }
   }, [postDetails]);
 
@@ -69,7 +116,12 @@ const Post = ({ postDetails }) => {
               {postDetails.owner.username}
             </div>
           </Link>
-          <RiMore2Fill />
+          <div
+            className=" hover:bg-stone-900 rounded-full p-2 cursor-pointer"
+            onClick={() => setIsOpen(true)}
+          >
+            <RiMore2Fill className=" rotate-90" />
+          </div>
         </div>
         <div className="home-post min-h-60 bg-zinc-800 flex flex-col justify-center">
           <img src={postDetails.image} className="h-full" />
@@ -117,6 +169,29 @@ const Post = ({ postDetails }) => {
             {postDetails.createdAt}
           </span>
         </div>
+        <Modal
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          options={[
+            {
+              content: amIOwner
+                ? "Delete"
+                : checkIsFollowing
+                ? "Unfollow"
+                : "Follow",
+              style: `${(checkIsFollowing || amIOwner) && "text-red-500"} ${
+                amIOwner && "border-none"
+              }`,
+            },
+          ]}
+          setClickedOn={setClickedOn}
+          user={
+            !amIOwner && {
+              username: postDetails.owner.username,
+              profilePicture: postDetails.owner.profilePicture,
+            }
+          }
+        />
       </div>
     )
   );

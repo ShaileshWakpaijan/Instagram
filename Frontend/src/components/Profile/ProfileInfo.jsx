@@ -30,7 +30,11 @@ const ProfileInfo = ({ user, isItMe }) => {
 
         {/* Responsive */}
 
-        {!isItMe && <PageHeading heading={username} />}
+        {!isItMe && (
+          <div className=" hidden sm:block">
+            <PageHeading heading={username} />
+          </div>
+        )}
         <div className=" hidden sm:flex items-center bg-black justify-center">
           <div className=" flex px-4 py-16 ">
             <div

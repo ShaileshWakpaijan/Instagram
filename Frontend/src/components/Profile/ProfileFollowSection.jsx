@@ -2,14 +2,18 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import useFollow from "../../hooks/useFollow";
 import LoadingSpinner from "../LoadingSpinner";
+import Modal from "../Modal";
 
 const ProfileFollowSection = ({ user, isItMe }) => {
   const [loading, setLoading] = useState(false);
   const { isFollowing, username } = user;
   const [checkIsFollowing, setCheckIsFollowing] = useState(isFollowing);
+  const [isOpen, setIsOpen] = useState(false);
+  const [clickedOn, setClickedOn] = useState("");
 
   const handleFollowBtn = async () => {
     setLoading(true);
+    setClickedOn("");
     const follow = await useFollow(
       username,
       checkIsFollowing,
@@ -18,6 +22,8 @@ const ProfileFollowSection = ({ user, isItMe }) => {
     console.log(follow);
     setLoading(false);
   };
+
+  if (clickedOn === "Unfollow") handleFollowBtn();
 
   return (
     user && (
@@ -38,7 +44,9 @@ const ProfileFollowSection = ({ user, isItMe }) => {
             </Link>
           ) : (
             <button
-              onClick={handleFollowBtn}
+              onClick={() => {
+                !checkIsFollowing ? handleFollowBtn() : setIsOpen(true);
+              }}
               className={` bg-${
                 checkIsFollowing ? "zinc-600" : "root"
               } py-[.3rem] text-sm w-28 font-bold rounded-md relative`}
@@ -51,6 +59,13 @@ const ProfileFollowSection = ({ user, isItMe }) => {
             Message
           </button>
         </div>
+        <Modal
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          options={[{ content: "Unfollow", style: "text-red-500" }]}
+          setClickedOn={setClickedOn}
+          user={user}
+        />
       </div>
     )
   );

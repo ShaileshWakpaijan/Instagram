@@ -15,13 +15,16 @@ const {
   getAllLikedPost,
   getUserPosts,
   getAllSavedPost,
+  deleteUser,
 } = require("../controllers/user.controllers");
 
 const { verifyJWT } = require("../middlewares/auth.middlewares");
 const { upload } = require("../middlewares/Multer.middlewares");
 const router = express.Router();
 
-router.route("/verify-register").post(validateUser, wrapAsync(validateRegisterUser));
+router
+  .route("/verify-register")
+  .post(validateUser, wrapAsync(validateRegisterUser));
 
 router
   .route("/register")
@@ -35,6 +38,8 @@ router
   .route("/:username/update")
   .patch(verifyJWT, upload.single("profile"), wrapAsync(updateUser));
 
+router.route("/:username/delete").patch(verifyJWT, deleteUser);
+
 router.route("/search").get(verifyJWT, wrapAsync(searchUsers));
 
 router.route("/:username").get(verifyJWT, wrapAsync(getUser));
@@ -44,6 +49,5 @@ router.route("/:username/posts").get(verifyJWT, wrapAsync(getUserPosts));
 router.route("/:username/liked").get(verifyJWT, wrapAsync(getAllLikedPost));
 
 router.route("/:username/saved").get(verifyJWT, wrapAsync(getAllSavedPost));
-
 
 module.exports = router;

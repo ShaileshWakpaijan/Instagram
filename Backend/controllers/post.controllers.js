@@ -3,7 +3,7 @@ const Post = require("../models/post.model");
 const Follow = require("../models/follow.model");
 const ApiResponse = require("../utils/ApiResponse");
 const ExpressError = require("../utils/ExpressError");
-const uploadOnCloudinary = require("../utils/cloudinary");
+const { uploadOnCloudinary } = require("../utils/cloudinary");
 const pagination = require("../utils/pagination");
 
 const getAllFolloedPost = async (req, res, next) => {
@@ -219,9 +219,9 @@ const getAllPost = async (req, res) => {
       $project: {
         comments: 0,
         likes: 0,
-        saves: 0
-      }
-    }
+        saves: 0,
+      },
+    },
   ]);
 
   let page = req.query.page || 1;
@@ -241,6 +241,7 @@ const getAllPost = async (req, res) => {
 const createPost = async (req, res) => {
   if (!req.body.caption.length)
     return next(new ExpressError(422, "Field should not be empty."));
+
   let postImage;
   if (req.file) {
     const response = await uploadOnCloudinary(req.file.path);

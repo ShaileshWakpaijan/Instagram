@@ -13,6 +13,7 @@ import PostUpload from "./PostUpload";
 import PostSaved from "./PostSaved"
 import Home from "./Home"
 import PostLiked from "./PostLiked";
+import AccountDelete from "./AccountDelete"
 
 export {
   Login,
@@ -30,5 +31,6 @@ export {
   PostSaved,
   Home,
   PostLiked,
-  
+  AccountDelete,
+
 };

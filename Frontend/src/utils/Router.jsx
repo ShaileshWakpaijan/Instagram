@@ -15,7 +15,8 @@ import {
   PostUpload,
   PostSaved,
   Home,
-  PostLiked
+  PostLiked,
+  AccountDelete
 
 } from "../pages/index";
 import ProfileSetup from "../pages/ProfileSetup";
@@ -35,6 +36,7 @@ const Router = () => {
           </Route>
           <Route path="/profile/:username/followers" element={<FollowList />} />
           <Route path="/profile/:username/following" element={<FollowList />} />
+          <Route path="/profile/:username/delete" element={<AccountDelete />} />
           <Route path="/profile/settings" element={<Settings />} />
           <Route path="/profile/settings/edit" element={<EditPage />} />
           <Route path="/profile/settings/liked" element={<PostLiked />} />

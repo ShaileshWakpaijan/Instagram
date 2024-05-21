@@ -4,14 +4,18 @@ import LoadingSpinner from "./LoadingSpinner";
 import { useSelector } from "react-redux";
 import useFollow from "../hooks/useFollow";
 import axios from "../utils/axios";
+import Modal from "./Modal";
 
 const SearchResult = ({ user, fromSearch }) => {
   const [loading, setLoading] = useState(false);
   const [checkIsFollowing, setCheckIsFollowing] = useState(false);
   const { userDetails } = useSelector((state) => state.user);
+  const [isOpen, setIsOpen] = useState(false);
+  const [clickedOn, setClickedOn] = useState("");
 
   const handleFollowBtn = async () => {
     setLoading(true);
+    setClickedOn("");
     const follow = await useFollow(
       user.username,
       checkIsFollowing,
@@ -20,6 +24,8 @@ const SearchResult = ({ user, fromSearch }) => {
     console.log(follow);
     setLoading(false);
   };
+
+  if (clickedOn === "Unfollow") handleFollowBtn();
 
   const useCheckFollowing = async () => {
     try {
@@ -52,7 +58,9 @@ const SearchResult = ({ user, fromSearch }) => {
       {!fromSearch && (
         <>
           <button
-            onClick={handleFollowBtn}
+            onClick={() => {
+              !checkIsFollowing ? handleFollowBtn() : setIsOpen(true);
+            }}
             className={` bg-${
               checkIsFollowing ? "zinc-600" : "root"
             } py-[.3rem] text-sm h-8 w-24 font-bold rounded-md relative ${
@@ -64,6 +72,13 @@ const SearchResult = ({ user, fromSearch }) => {
           </button>
         </>
       )}
+      <Modal
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        options={[{ content: "Unfollow", style: "text-red-500" }]}
+        setClickedOn={setClickedOn}
+        user={user}
+      />
     </div>
   );
 };

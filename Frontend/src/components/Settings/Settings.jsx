@@ -1,7 +1,7 @@
 import { RiArrowRightSLine } from "@remixicon/react";
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   setAccessToken,
   setAuthentication,
@@ -20,6 +20,8 @@ const Settings = () => {
     dispatch(setAccessToken(null));
     navigate("/login");
   };
+
+  const { userDetails } = useSelector((state) => state.user);
 
   return (
     <div className=" min-h-screen bg-black">
@@ -41,6 +43,12 @@ const Settings = () => {
         <li className=" p-3 border-b-[1px] border-neutral-600 flex items-center justify-between">
           Contact Us <RiArrowRightSLine className=" text-neutral-500" />
         </li>
+        <Link
+          to={`/profile/${userDetails.username}/delete`}
+          className=" p-3 border-b-[1px] text-red-500 border-neutral-600 flex items-center justify-between"
+        >
+          Delete Account <RiArrowRightSLine className=" text-neutral-500" />
+        </Link>
         <li
           onClick={handleClick}
           className=" cursor-pointer p-3 border-b-[1px] border-neutral-600 flex items-center justify-between text-red-500"

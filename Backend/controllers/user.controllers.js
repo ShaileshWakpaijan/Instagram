@@ -2,7 +2,10 @@ const mongoose = require("mongoose");
 const User = require("../models/user.models");
 const ApiResponse = require("../utils/ApiResponse");
 const ExpressError = require("../utils/ExpressError");
-const uploadOnCloudinary = require("../utils/cloudinary");
+const {
+  uploadOnCloudinary,
+  deleteOnCloudinary,
+} = require("../utils/cloudinary");
 const pagination = require("../utils/pagination");
 
 const generatAccessAndRefresshTokens = async (userId) => {
@@ -177,10 +180,12 @@ const updateUser = async (req, res, next) => {
       next(new ExpressError(409, "Username already exists."));
     }
   }
-  
+
   if (req.file) {
     const response = await uploadOnCloudinary(req.file.path);
     req.body.profilePicture = response.url;
+    let imageArr = user.profilePicture.split("/");
+    await deleteOnCloudinary(imageArr[imageArr.length - 1].split(".")[0]);
   }
 
   let loggedInUser = await User.findByIdAndUpdate(
@@ -193,6 +198,19 @@ const updateUser = async (req, res, next) => {
     .json(
       new ApiResponse(200, { loggedInUser }, "Profile updated successfully.")
     );
+};
+
+const deleteUser = async (req, res, next) => {
+  if (!req.body.username)
+    return next(new ExpressError(400, "Username should not be empty."));
+
+  let user = await User.findOne({ username: req.params.username });
+  if (!user._id.equals(req.user._id)) {
+    next(new ExpressError(403, "You cannot edit others profile."));
+  }
+
+  
+
 };
 
 const searchUsers = async (req, res, next) => {
@@ -482,7 +500,7 @@ const getAllLikedPost = async (req, res, next) => {
     },
   ]);
 
-  likedPosts = likedPosts[0].likedPosts
+  likedPosts = likedPosts[0].likedPosts;
 
   let page = req.query.page || 1;
   let limit = req.query.limit || 5;
@@ -560,7 +578,7 @@ const getAllSavedPost = async (req, res, next) => {
     },
   ]);
 
-  savedPosts = savedPosts[0].savedPosts
+  savedPosts = savedPosts[0].savedPosts;
 
   let page = req.query.page || 1;
   let limit = req.query.limit || 5;
@@ -598,5 +616,6 @@ module.exports = {
   getUser,
   getUserPosts,
   getAllLikedPost,
-  getAllSavedPost
+  getAllSavedPost,
+  deleteUser
 };
