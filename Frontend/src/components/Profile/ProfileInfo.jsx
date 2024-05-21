@@ -1,6 +1,7 @@
 import React from "react";
 import ProfileFollowSection from "./ProfileFollowSection";
 import ProfileFollowInfo from "./ProfileFollowInfo";
+import PageHeading from "../PageHeading";
 
 const ProfileInfo = ({ user, isItMe }) => {
   const { username, profilePicture, name, bio } = user;
@@ -29,8 +30,9 @@ const ProfileInfo = ({ user, isItMe }) => {
 
         {/* Responsive */}
 
+        {!isItMe && <PageHeading heading={username} />}
         <div className=" hidden sm:flex items-center bg-black justify-center">
-          <div className=" flex px-4 py-20 ">
+          <div className=" flex px-4 py-16 ">
             <div
               id="prof-img"
               className=" bg-white rounded-full w-40 h-40 overflow-hidden"
