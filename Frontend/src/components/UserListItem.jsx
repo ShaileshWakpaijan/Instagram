@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import LoadingSpinner from "./LoadingSpinner";
 import { useSelector } from "react-redux";
 import useFollow from "../hooks/useFollow";
 import axios from "../utils/axios";
 import Modal from "./Modal";
+import { FlashMsgContext } from "../context/FlashContext";
 
 const SearchResult = ({ user, fromSearch }) => {
   const [loading, setLoading] = useState(false);
@@ -12,16 +13,15 @@ const SearchResult = ({ user, fromSearch }) => {
   const { userDetails } = useSelector((state) => state.user);
   const [isOpen, setIsOpen] = useState(false);
   const [clickedOn, setClickedOn] = useState("");
+  const { showFlashMsg } = useContext(FlashMsgContext);
 
   const handleFollowBtn = async () => {
     setLoading(true);
     setClickedOn("");
-    const follow = await useFollow(
-      user.username,
-      checkIsFollowing,
-      setCheckIsFollowing
+    await useFollow(user.username, checkIsFollowing, setCheckIsFollowing);
+    showFlashMsg(
+      `You ${checkIsFollowing ? "unfolow" : "following"} @${user.username}`
     );
-    console.log(follow);
     setLoading(false);
   };
 

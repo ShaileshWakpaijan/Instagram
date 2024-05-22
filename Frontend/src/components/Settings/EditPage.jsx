@@ -1,11 +1,12 @@
 import axios from "../../utils/axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { userUpdate } from "../../store/actions/userAction";
 import LoadingSpinner from "../LoadingSpinner";
 import PageHeading from "../PageHeading";
+import {FlashMsgContext} from "../../context/FlashContext";
 
 const EditPage = () => {
   const [loading, setLoading] = useState(false);
@@ -15,6 +16,8 @@ const EditPage = () => {
   const dispatch = useDispatch();
   const { register, handleSubmit } = useForm();
   const { userDetails } = useSelector((state) => state.user);
+  const { showFlashMsg } = useContext(FlashMsgContext);
+
   const handleFormSubmit = async (data) => {
     let formData = new FormData();
     setLoading(true);
@@ -31,7 +34,9 @@ const EditPage = () => {
       response = response.data.data;
       dispatch(userUpdate(data.username));
       navigate(`/profile/${data.username}`);
+      showFlashMsg("Your profile update successfully.")
     } catch (error) {
+      showFlashMsg(error.response.data.message)
       console.log(error.response.data.message);
     }
     setLoading(false);

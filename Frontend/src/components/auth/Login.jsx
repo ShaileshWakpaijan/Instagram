@@ -1,16 +1,18 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Input } from "../index";
 import { useForm } from "react-hook-form";
 import useLogin from "../../hooks/useLogin";
 import { useDispatch } from "react-redux";
 import { loginAction } from "../../store/actions/userAction";
+import { FlashMsgContext } from "../../context/FlashContext";
 
 const Login = () => {
   const { register, handleSubmit } = useForm();
   const [error, setError] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { showFlashMsg } = useContext(FlashMsgContext);
 
   const handleLogin = async (data) => {
     setError("");
@@ -19,8 +21,9 @@ const Login = () => {
       setError(userDetails.error);
       return;
     }
+    showFlashMsg("Login Successfully.");
     dispatch(loginAction(userDetails));
-    navigate(`/profile/${data.username}`)
+    navigate(`/profile/${data.username}`);
   };
 
   return (

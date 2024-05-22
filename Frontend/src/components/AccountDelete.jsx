@@ -1,36 +1,50 @@
 import React from "react";
+import PageHeading from "./PageHeading";
 
 const AccountDelete = () => {
   return (
-    <>
-      <h1 className=" text-lg">Disclaimer: Account Deletion</h1>
-      
-      <br />
-      <p className=" text-sm">
-        Before you delete your account, please note the following:
-        <ol type="a">
-          <li>
-            Permanent Action: Account deletion is irreversible. You cannot
-            recover your account once it’s deleted.
+    <div className=" min-h-screen">
+      <PageHeading heading={"Account Delete"} />
+      <div className=" py-5 px-4 text ">
+        <h1 className=" text-lg text-red-500">Disclaimer: Account Deletion</h1>
+        <br />
+        <p className=" text-sm mb-3">
+          Before you delete your account, please note the following:
+        </p>
+        <ol className="px-4 list-decimal">
+          <li className=" mb-3">
+            <b>Permanent Action:</b> Account deletion is irreversible. You
+            cannot recover your account once it’s deleted.
           </li>
-          <li>
-            Data Loss: All your data, including profile information and
+          <li className=" mb-3">
+            <b>Data Loss:</b> All your data, including profile information and
             settings, will be permanently deleted.
           </li>
-          <li>
-            Content Removal: All your posts, comments, and other content will be
-            permanently removed and cannot be recovered.
-          </li>
-          <li>
-            Service Access: You will lose access to any services or content
-            associated with your account, including purchases or subscriptions.
+          <li className=" mb-3">
+            <b>Content Removal:</b> All your posts, comments, and other content
+            will be permanently removed and cannot be recovered.
           </li>
         </ol>
-        By proceeding, you acknowledge and accept these terms. If you have
-        questions, please contact support before deleting your account.
-        **[Proceed with Account Deletion]**
-      </p>
-    </>
+        <p className=" mb-2">
+          By proceeding, you acknowledge and accept these terms. If you have
+          questions, please contact support before deleting your account.
+        </p>
+        <p className=" my-4">
+          Email:{" "}
+          <a
+            href={`emailto:${import.meta.env.VITE_CONTACT_EMAIL}"`}
+            target="_blank"
+            className=" text-sky-500"
+          >
+            {import.meta.env.VITE_CONTACT_EMAIL}
+          </a>
+        </p>
+
+        <button className=" bg-rose-600 py-1 px-3 rounded-md mt-4 text-white text-sm">
+          Delete Account
+        </button>
+      </div>
+    </div>
   );
 };
 

@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import LoadingSpinner from "../LoadingSpinner";
 import PageHeading from "../PageHeading";
 import axios from "../../utils/axios";
+import { FlashMsgContext } from "../../context/FlashContext";
 
 const PostUpload = () => {
   const [loading, setLoading] = useState(false);
@@ -12,6 +13,7 @@ const PostUpload = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const image = state.image;
+  const { showFlashMsg } = useContext(FlashMsgContext);
 
   const reader = new FileReader();
   reader.onload = function (e) {
@@ -29,10 +31,10 @@ const PostUpload = () => {
     formData.append("caption", caption);
 
     try {
-      let { data } = await axios.post(`/post`, formData, {
+      await axios.post(`/post`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      console.log(data.data);
+      showFlashMsg("Post uploaded successfully.");
       navigate(-1);
     } catch (error) {
       console.log(error);
@@ -62,7 +64,9 @@ const PostUpload = () => {
           onChange={(e) => setCaption(e.target.value)}
         />
         {error && (
-          <span className=" text-sm text-red-500 my-auto mt-1 ml-[5%] sm:ml-[10%] ">{error}</span>
+          <span className=" text-sm text-red-500 my-auto mt-1 ml-[5%] sm:ml-[10%] ">
+            {error}
+          </span>
         )}
         <button
           type="submit"

@@ -1,12 +1,13 @@
 import { RiArrowLeftSLine } from "@remixicon/react";
 import axios from "../../utils/axios";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import useSignup from "../../hooks/useSignup";
 import { loginAction } from "../../store/actions/userAction";
 import Input from "../Input";
+import { FlashMsgContext } from "../../context/FlashContext";
 // import Loading from "./Loading";
 
 const AddDetails = () => {
@@ -16,6 +17,7 @@ const AddDetails = () => {
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state) => state.user);
   const { state } = useLocation();
+
   if (!state) {
     return <h2 className=" text-black">Page Not Found</h2>;
   }
@@ -23,7 +25,6 @@ const AddDetails = () => {
   const { register, handleSubmit } = useForm();
 
   const handleFormSubmit = async (data) => {
-    console.log(data);
     setLoading(true);
     let formData = new FormData();
     formData.append("profile", data.profile[0]);
@@ -33,28 +34,21 @@ const AddDetails = () => {
     formData.append("email", email);
     formData.append("password", password);
     formData.append("confirmPassword", confirmPassword);
+    const { showFlashMsg } = useContext(FlashMsgContext);
 
     let response = await useSignup(formData);
-
-    console.log(response);
-
     if (response.error) {
-      console.log(response.error);
+      showFlashMsg(response.error);
       return;
     }
 
     dispatch(loginAction(response));
     nevigate(`/profile/${data.username}`);
-
+    showFlashMsg("Account created successfully.");
     setLoading(false);
   };
 
-  const handleCheckUsername = async (e) => {
-    // let response = await axios.post('/user/validate-username', {username: e.target.value})
-    // console.log(response)
-  };
-
-  return state || isAuthenticated  ? (
+  return state || isAuthenticated ? (
     <div className=" min-h-screen bg-black">
       <div
         id="setting-top"

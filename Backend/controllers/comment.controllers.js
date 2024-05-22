@@ -3,7 +3,7 @@ const Comment = require("../models/comment.model");
 const Post = require("../models/post.model");
 const ApiResponse = require("../utils/ApiResponse");
 const ExpressError = require("../utils/ExpressError");
-const pagination = require("../utils/pagination")
+const pagination = require("../utils/pagination");
 
 const postComment = async (req, res, next) => {
   let post = await Post.findById(req.params.postid);
@@ -21,14 +21,11 @@ const postComment = async (req, res, next) => {
 };
 
 const deleteComment = async (req, res, next) => {
-  let post = await Post.findById(req.params.postid);
-  if (!post) return next(new ExpressError(404, "Post Not Found."));
-
-  post = await Comment.findOneAndDelete({
+  let comment = await Comment.findOneAndDelete({
     $and: [{ owner: req.user._id }, { _id: req.params.commentid }],
   });
 
-  if (!post)
+  if (!comment)
     return next(new ExpressError(403, "You cannot delete others comment"));
 
   res.status(200).json(new ApiResponse(200, "Comment deleted successfully."));

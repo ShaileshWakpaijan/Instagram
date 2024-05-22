@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import useFollow from "../../hooks/useFollow";
 import LoadingSpinner from "../LoadingSpinner";
 import Modal from "../Modal";
+import { FlashMsgContext } from "../../context/FlashContext";
 
 const ProfileFollowSection = ({ user, isItMe }) => {
   const [loading, setLoading] = useState(false);
@@ -10,16 +11,19 @@ const ProfileFollowSection = ({ user, isItMe }) => {
   const [checkIsFollowing, setCheckIsFollowing] = useState(isFollowing);
   const [isOpen, setIsOpen] = useState(false);
   const [clickedOn, setClickedOn] = useState("");
+  const { showFlashMsg } = useContext(FlashMsgContext);
 
   const handleFollowBtn = async () => {
     setLoading(true);
     setClickedOn("");
-    const follow = await useFollow(
+    await useFollow(
       username,
       checkIsFollowing,
       setCheckIsFollowing
     );
-    console.log(follow);
+    showFlashMsg(
+      `You ${checkIsFollowing ? "unfolow" : "following"} @${user.username}`
+    );
     setLoading(false);
   };
 

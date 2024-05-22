@@ -1,10 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "../../utils/axios";
 import { RiMore2Fill } from "@remixicon/react";
 import Modal from "../Modal";
 import { useSelector } from "react-redux";
 import useFollow from "../../hooks/useFollow";
+import { FlashMsgContext } from "../../context/FlashContext";
 
 const Post = ({ postDetails }) => {
   const [profilePicture, setProfilePicture] = useState("");
@@ -15,6 +16,7 @@ const Post = ({ postDetails }) => {
   const [clickedOn, setClickedOn] = useState("");
   const [checkIsFollowing, setCheckIsFollowing] = useState(false);
   const navigate = useNavigate();
+  const { showFlashMsg } = useContext(FlashMsgContext);
 
   const useCheckFollowing = async () => {
     try {
@@ -27,7 +29,7 @@ const Post = ({ postDetails }) => {
     }
   };
 
-  const { user, userDetails, userPosts } = useSelector((state) => state.user);
+  const { userDetails } = useSelector((state) => state.user);
 
   const amIOwner =
     postDetails?.owner.username === userDetails.username ? true : false;
@@ -37,10 +39,12 @@ const Post = ({ postDetails }) => {
       if (!isLiked) {
         setLikesCount((prev) => prev + 1);
         setIsLiked((prev) => !prev);
+        showFlashMsg("Liked Successfully.");
         await axios.post(`/like/${postDetails._id}/like`);
       } else {
         setLikesCount((prev) => prev - 1);
         setIsLiked((prev) => !prev);
+        showFlashMsg("Unliked Successfully.");
         await axios.delete(`/like/${postDetails._id}/like`);
       }
     } catch (error) {
@@ -53,11 +57,11 @@ const Post = ({ postDetails }) => {
       if (!isSaved) {
         setIsSaved((prev) => !prev);
         await axios.post(`/save/${postDetails._id}/save`);
-        console.log("saved");
+        showFlashMsg("Post saved Successfully.");
       } else {
         setIsSaved((prev) => !prev);
         await axios.delete(`/save/${postDetails._id}/save`);
-        console.log("unsaved");
+        showFlashMsg("Post remove from Saved Successfully.");
       }
     } catch (error) {
       console.log("Error saving/unsaving post:", error);
@@ -66,22 +70,27 @@ const Post = ({ postDetails }) => {
 
   const handleUnfollow = async () => {
     setClickedOn("");
-    const follow = await useFollow(
+    await useFollow(
       postDetails.owner.username,
       checkIsFollowing,
       setCheckIsFollowing
     );
-    console.log(follow);
+    showFlashMsg(
+      `You ${checkIsFollowing ? "unfolow" : "following"} @${
+        postDetails.owner.username
+      }`
+    );
   };
 
   const handleDeletePost = async () => {
     setClickedOn("");
     try {
       await axios.delete(`/post/${postDetails?._id}`);
+      showFlashMsg("Post deleted Successfully.");
     } catch (error) {
       console.log(error);
     }
-    navigate(-1)
+    navigate(-1);
   };
 
   if (clickedOn === "Unfollow" || clickedOn === "Follow") handleUnfollow();

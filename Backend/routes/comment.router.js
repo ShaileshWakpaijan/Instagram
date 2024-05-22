@@ -12,6 +12,6 @@ router.route("/:postid").post(verifyJWT, wrapAsync(postComment));
 
 router.route("/:postid").get(verifyJWT, wrapAsync(getPostComments));
 
-router.route("/:postid").delete(verifyJWT, wrapAsync(deleteComment));
+router.route("/:commentid").delete(verifyJWT, wrapAsync(deleteComment));
 
 module.exports = router;
