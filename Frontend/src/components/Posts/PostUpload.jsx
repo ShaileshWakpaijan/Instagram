@@ -22,6 +22,7 @@ const PostUpload = () => {
   reader.readAsDataURL(image);
 
   const handleSubmit = async (e) => {
+    if (loading) return;
     e.preventDefault();
     if (caption.trim() === "") return setError("Caption should not be empty.");
 
@@ -70,7 +71,7 @@ const PostUpload = () => {
         )}
         <button
           type="submit"
-          className=" ml-[5%] sm:ml-[10%] mt-5 w-fit bg-root px-4 py-2 rounded-md relative"
+          className=" disabled:bg-gray-500 ml-[5%] sm:ml-[10%] mt-5 w-fit bg-root px-4 py-2 rounded-md relative"
         >
           <span className={`${loading && "invisible"}`}>Post</span>
           {loading && <LoadingSpinner />}

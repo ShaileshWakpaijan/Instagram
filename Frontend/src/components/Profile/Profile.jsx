@@ -4,7 +4,7 @@ import {
   RiScrollToBottomLine,
   RiSettingsLine,
 } from "@remixicon/react";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ProfileInfo from "./ProfileInfo";
 import ProfileFollowInfo from "./ProfileFollowInfo";
 import PostGrid from "../Posts/PostGrid";
@@ -16,8 +16,11 @@ import {
   useParams,
 } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUser, fetchUserPosts } from "../../store/actions/userAction";
+import { fetchUser } from "../../store/actions/userAction";
 import { removeUser } from "../../store/reducers/userSlice";
+import axios from "../../utils/axios";
+import InfiniteScroll from "react-infinite-scroll-component";
+import LoadingSpinner from "../LoadingSpinner";
 
 const Profile = () => {
   let { pathname } = useLocation();
@@ -26,14 +29,30 @@ const Profile = () => {
   const params = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(false);
+  const [userPosts, setUserPosts] = useState([]);
 
-  const { user, userDetails, userPosts } = useSelector((state) => state.user);
+  const { user, userDetails } = useSelector((state) => state.user);
 
   const isItMe = params.username === userDetails.username ? true : false;
 
+  const fetchUserPosts = async () => {
+    try {
+      let { data } = await axios.get(
+        `/user/${params.username}/posts?limit=12&page=${page}`
+      );
+      setUserPosts((prevData) => [...prevData, ...data.data.userPosts]);
+      setPage((prev) => data.data.isNext && prev + 1);
+      setHasMore(data.data.isNext);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     dispatch(fetchUser(params.username));
-    dispatch(fetchUserPosts(params.username));
+    fetchUserPosts();
 
     return () => dispatch(removeUser());
   }, [isItMe]);
@@ -92,9 +111,20 @@ const Profile = () => {
           )}
         </div>
         <div className="">
-          {pathname !== "feed" && pathname !== "saved" && (
-            <PostGrid userPosts={userPosts} />
-          )}
+          <InfiniteScroll
+            dataLength={userPosts.length}
+            next={fetchUserPosts}
+            hasMore={hasMore}
+            loader={
+              <div className=" relative py-8 sm:py-4">
+                <LoadingSpinner />
+              </div>
+            }
+          >
+            {pathname !== "feed" && pathname !== "saved" && (
+              <PostGrid userPosts={userPosts} />
+            )}
+          </InfiniteScroll>
           <Outlet />
         </div>
       </div>

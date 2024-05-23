@@ -40,9 +40,9 @@ const Settings = () => {
         >
           Liked Posts <RiArrowRightSLine className=" text-neutral-500" />
         </Link>
-        <li className=" p-3 border-b-[1px] border-neutral-600 flex items-center justify-between">
-          Contact Us <RiArrowRightSLine className=" text-neutral-500" />
-        </li>
+        <a href={`mailto:${import.meta.env.VITE_CONTACT_EMAIL}`} className=" p-3 border-b-[1px] border-neutral-600 flex items-center justify-between">
+          Contact Us (Email: {import.meta.env.VITE_CONTACT_EMAIL}) <RiArrowRightSLine className=" text-neutral-500" />
+        </a>
         <Link
           to={`/profile/${userDetails.username}/delete`}
           className=" p-3 border-b-[1px] text-red-500 border-neutral-600 flex items-center justify-between"

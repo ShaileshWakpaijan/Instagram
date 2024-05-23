@@ -32,8 +32,8 @@ const AccountDelete = () => {
         <p className=" my-4">
           Email:{" "}
           <a
-            href={`emailto:${import.meta.env.VITE_CONTACT_EMAIL}"`}
-            target="_blank"
+            href={`mailto:${import.meta.env.VITE_CONTACT_EMAIL}`}
+            // target="_blank"
             className=" text-sky-500"
           >
             {import.meta.env.VITE_CONTACT_EMAIL}

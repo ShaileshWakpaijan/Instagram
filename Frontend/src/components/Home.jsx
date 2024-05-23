@@ -2,13 +2,19 @@ import { RiHeartLine } from "@remixicon/react";
 import React, { useEffect, useState } from "react";
 import PostLayout from "./Posts/PostLayout";
 import axios from "../utils/axios";
+import InfiniteScroll from "react-infinite-scroll-component";
 import LoadingSpinner from "./LoadingSpinner";
 const Home = () => {
-  const [posts, setPosts] = useState(null);
+  const [posts, setPosts] = useState([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(false);
+
   const getHomePosts = async () => {
     try {
-      let { data } = await axios.get("/post/home?limit=5");
-      setPosts(data.data.posts);
+      let { data } = await axios.get(`/post/home?limit=4&page=${page}`);
+      setPosts((prevData) => [...prevData, ...data.data.posts]);
+      setPage((prev) => data.data.isNext && prev + 1);
+      setHasMore(data.data.isNext);
     } catch (error) {
       console.log(error);
     }
@@ -41,15 +47,30 @@ const Home = () => {
         </div>
       </div>
 
+      {posts.length && (
         <div id="home-page">
-          {posts ? (
-            posts.map((post, index) => {
-              return <PostLayout postDetails={post} key={index} />;
-            })
-          ) : (
-            <LoadingSpinner />
-          )}
+          <InfiniteScroll
+            dataLength={posts.length}
+            next={getHomePosts}
+            hasMore={hasMore}
+            loader={
+              <div className=" relative py-8 sm:py-10">
+                <LoadingSpinner />
+              </div>
+            }
+          >
+            {posts.length ? (
+              posts.map((post, index) => {
+                return <PostLayout postDetails={post} key={index} />;
+              })
+            ) : (
+              <div className=" relative py-8 sm:py-10">
+                <LoadingSpinner />
+              </div>
+            )}
+          </InfiniteScroll>
         </div>
+      )}
     </div>
   );
 };

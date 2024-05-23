@@ -4,28 +4,44 @@ import axios from "../../utils/axios";
 import { useParams } from "react-router-dom";
 import OneComment from "./OneComment";
 import { useSelector } from "react-redux";
+import InfiniteScroll from "react-infinite-scroll-component";
+import LoadingSpinner from "../LoadingSpinner";
 
 const Comment = () => {
   const { userDetails } = useSelector((state) => state.user);
   const { postid } = useParams();
   const [comment, setComment] = useState("");
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(false);
   const [allComments, setAllComments] = useState([]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       setComment("");
-      await axios.post(`/comment/${postid}`, { comment });
-      getPostComment();
+      let { data } = await axios.post(`/comment/${postid}`, { comment });
+      let newComment = {
+        ...data.data,
+        owner: {
+          _id: userDetails._id,
+          profilePicture: userDetails.profilePicture,
+          username: userDetails.username,
+        },
+      };
+      setAllComments((prevData) => [newComment, ...prevData]);
     } catch (error) {
-      console.log(error.response.data);
+      console.log(error);
     }
   };
 
   const getPostComment = async () => {
     try {
-      let { data } = await axios.get(`/comment/${postid}`);
-      setAllComments(data.data.allComments);
+      let { data } = await axios.get(
+        `/comment/${postid}?limit=15&page=${page}`
+      );
+      setAllComments((prevData) => [...prevData, ...data.data.allComments]);
+      setPage((prev) => data.data.isNext && prev + 1);
+      setHasMore(data.data.isNext);
     } catch (error) {
       console.log(error.response.data);
     }
@@ -47,15 +63,28 @@ const Comment = () => {
             </p>
           )}
 
-          <div className=" px-2 py-5 flex flex-col gap-5 pb-28">
-            {allComments.map((c, index) => (
-              <OneComment key={index} comment={c} />
-            ))}
+          <div className=" pb-28">
+            <InfiniteScroll
+              dataLength={allComments.length}
+              next={getPostComment}
+              hasMore={hasMore}
+              loader={
+                <div className=" relative py-4">
+                  <LoadingSpinner />
+                </div>
+              }
+            >
+              <div className=" px-2 py-5 flex flex-col gap-5">
+                {allComments.map((c, index) => (
+                  <OneComment key={index} comment={c} />
+                ))}
+              </div>
+            </InfiniteScroll>
           </div>
         </div>
         <form
           onSubmit={handleSubmit}
-          className=" bg-black border-t-[1px] border-neutral-600 py-6 w-full flex items-center gap-3 px-5 fixed bottom-12 sm:bottom-0 sm:w-[72vw] lg:w-[40vw] sm:justify-between
+          className=" bg-black border-t-[1px] border-neutral-600 py-6 w-full flex items-center gap-3 px-5 fixed z-40 bottom-12 sm:bottom-0 sm:w-[72vw] lg:w-[40vw] sm:justify-between
 
           "
         >

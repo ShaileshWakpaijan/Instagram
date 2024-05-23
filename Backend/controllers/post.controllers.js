@@ -238,13 +238,14 @@ const getAllPost = async (req, res) => {
   res.json(new ApiResponse(200, { page, posts: allPost, isNext, isPrevious }));
 };
 
-const createPost = async (req, res) => {
+const createPost = async (req, res, next) => {
   if (!req.body.caption.length)
     return next(new ExpressError(422, "Field should not be empty."));
 
   let postImage;
   if (req.file) {
     const response = await uploadOnCloudinary(req.file.path);
+    if (!response) return next(new ExpressError(500, "Internal Server Error"));
     postImage = response.url;
   }
 

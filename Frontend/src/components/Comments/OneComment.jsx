@@ -47,7 +47,7 @@ const OneComment = ({ comment }) => {
           className=" my-auto hover:bg-stone-900 rounded-full p-2 cursor-pointer"
           onClick={() => setIsOpen(true)}
         >
-          <RiMore2Fill className=" rotate-90" />
+          <RiMore2Fill className=" rotate-90 relative z-0" />
         </div>
       )}
 

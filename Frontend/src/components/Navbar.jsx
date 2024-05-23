@@ -23,7 +23,7 @@ const Navbar = () => {
     location !== "/profile/setup" &&
     location !== "/signup" && (
       <div
-        className=" border-t-[1px] border-neutral-600 flex justify-around fixed bottom-0 w-full h-fit bg-black
+        className=" border-t-[1px] border-neutral-600 flex justify-around fixed z-50 bottom-0 w-full h-fit bg-black
       sm:flex-col sm:h-screen sm:static sm:w-fit sm:px-2 lg:w-1/5 lg:px-3 sm:border-t-0 sm:justify-between sm:border-r-[1px] sm:py-10 lg:justify-between
       "
       >

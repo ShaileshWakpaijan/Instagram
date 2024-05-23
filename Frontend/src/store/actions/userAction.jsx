@@ -28,7 +28,7 @@ export const fetchUser = (username) => async (dispatch) => {
 
 export const fetchUserPosts = (username) => async (dispatch) => {
   try {
-    let { data } = await axios.get(`/user/${username}/posts`);
+    let { data } = await axios.get(`/user/${username}/posts?limit=6`);
     dispatch(setUserPosts(data.data.userPosts));
   } catch (err) {
     console.log(err);
