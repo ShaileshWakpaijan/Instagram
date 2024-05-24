@@ -10,7 +10,12 @@ const likeRoute = require("./routes/like.router");
 const saveRoute = require("./routes/save.router");
 const commentRoute = require("./routes/comment.router");
 
-app.use(cors({ origin: "*", credentials: true }));
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+  })
+);
 app.use(bodyParser.json());
 app.use(cookieParser());
 
