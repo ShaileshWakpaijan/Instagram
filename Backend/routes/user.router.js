@@ -18,7 +18,7 @@ const {
   deleteUser,
 } = require("../controllers/user.controllers");
 
-const { verifyJWT } = require("../middlewares/auth.middlewares");
+const { verifyJWT } = require("../middlewares/Auth.middlewares");
 const { upload } = require("../middlewares/Multer.middlewares");
 const router = express.Router();
 
