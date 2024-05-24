@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const wrapAsync = require("../utils/wrapAsync");
-const { verifyJWT } = require("../middlewares/auth.middlewares");
+const { verifyJWT } = require("../middlewares/Auth.middlewares");
 const {
   createPost,
   getPost,

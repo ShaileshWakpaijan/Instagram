@@ -1,5 +1,5 @@
 const express = require("express");
-const { verifyJWT } = require("../middlewares/auth.middlewares");
+const { verifyJWT } = require("../middlewares/Auth.middlewares");
 const wrapAsync = require("../utils/wrapAsync");
 const {
   followUser,
