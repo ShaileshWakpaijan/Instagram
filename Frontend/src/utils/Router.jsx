@@ -29,6 +29,7 @@ const Router = () => {
     <div>
       <Routes>
         <Route element={<ProtectedRoutes isAuthenticated={isAuthenticated} />}>
+          <Route path="/" element={<Home />} />
           <Route path="/home" element={<Home />} />
           <Route path="/profile/:username" element={<Profile />}>
             <Route path="/profile/:username/feed" element={<ProfileFeed />} />
