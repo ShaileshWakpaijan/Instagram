@@ -10,8 +10,8 @@ const Navbar = () => {
   location = location.pathname;
 
   let profilePicture = userDetails?.profilePicture
-    .split("/upload")
-    .join("/upload/w_50");
+    ?.split("/upload")
+    ?.join("/upload/w_50");
 
   const handleInputPost = async (e) => {
     const file = e.target.files[0];

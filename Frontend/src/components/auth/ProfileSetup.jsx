@@ -1,5 +1,4 @@
 import { RiArrowLeftSLine } from "@remixicon/react";
-import axios from "../../utils/axios";
 import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -8,15 +7,18 @@ import useSignup from "../../hooks/useSignup";
 import { loginAction } from "../../store/actions/userAction";
 import Input from "../Input";
 import { FlashMsgContext } from "../../context/FlashContext";
-// import Loading from "./Loading";
+import LoadingSpinner from "../LoadingSpinner";
 
 const AddDetails = () => {
   const { accessToken } = useSelector((state) => state.user);
+  const [preview, setPreview] = useState();
+  const [profileimg, setProfileimg] = useState();
   const [loading, setLoading] = useState(false);
   const nevigate = useNavigate();
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state) => state.user);
   const { state } = useLocation();
+  const { showFlashMsg } = useContext(FlashMsgContext);
 
   if (!state) {
     return <h2 className=" text-black">Page Not Found</h2>;
@@ -27,29 +29,29 @@ const AddDetails = () => {
   const handleFormSubmit = async (data) => {
     setLoading(true);
     let formData = new FormData();
-    formData.append("profile", data.profile[0]);
+    formData.append("profile", profileimg);
     formData.append("name", data.name);
     formData.append("bio", data.bio);
     formData.append("username", data.username);
     formData.append("email", email);
     formData.append("password", password);
     formData.append("confirmPassword", confirmPassword);
-    const { showFlashMsg } = useContext(FlashMsgContext);
 
     let response = await useSignup(formData);
     if (response.error) {
       showFlashMsg(response.error);
+      setLoading(false);
       return;
     }
-
+    
     dispatch(loginAction(response));
     nevigate(`/profile/${data.username}`);
-    showFlashMsg("Account created successfully.");
     setLoading(false);
+    showFlashMsg("Account created successfully.");
   };
 
   return state || isAuthenticated ? (
-    <div className=" min-h-screen bg-black">
+    <div className=" min-h-screen bg-black sm:w-1/3 mx-auto">
       <div
         id="setting-top"
         className=" relative text-center py-2 border-b-[1px] border-neutral-600"
@@ -73,11 +75,7 @@ const AddDetails = () => {
               id="profileimg"
               className=" w-24 h-24 mb-2 bg-zinc-800 rounded-full overflow-hidden mx-auto"
             >
-              <img
-                src="/images/david.png"
-                alt="profile-image"
-                className=" object-cover object-center"
-              />
+              <img src={preview} className=" object-cover object-center" />
             </div>
             <p className=" color-root text-xs text-center">
               Choose pofile image
@@ -88,6 +86,15 @@ const AddDetails = () => {
             type="file"
             id="profile"
             className=" invisible"
+            onChange={(event) => {
+              const file = event.target.files[0];
+              setProfileimg(file);
+              const reader = new FileReader();
+              reader.onload = function (e) {
+                setPreview(e.target.result);
+              };
+              reader.readAsDataURL(file);
+            }}
           />
           <label
             htmlFor="username"
@@ -99,8 +106,7 @@ const AddDetails = () => {
             {...register("username")}
             type="text"
             id="username"
-            className=" py-1 px-3 rounded-md bg-transparent mb-3  border-[1px] border-neutral-600"
-            onChange={handleCheckUsername}
+            className=" py-1 px-3 rounded-md bg-transparent mb-3 border-[1px] border-neutral-600"
           />
           <label
             htmlFor="name"
@@ -128,9 +134,8 @@ const AddDetails = () => {
             type="submit"
             className=" w-fit bg-root px-4 py-2 mt-3 rounded-md text-sm relative"
           >
-            Submit
-            {/* <span className={`${loading && "invisible"}`}>Submit</span> */}
-            {/* {loading && <Loading />} */}
+            <span className={`${loading && "invisible"}`}>Submit</span>
+            {loading && <LoadingSpinner />}
           </button>
         </form>
       </div>

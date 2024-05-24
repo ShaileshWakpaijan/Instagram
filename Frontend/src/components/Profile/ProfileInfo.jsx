@@ -2,6 +2,7 @@ import React from "react";
 import ProfileFollowSection from "./ProfileFollowSection";
 import ProfileFollowInfo from "./ProfileFollowInfo";
 import PageHeading from "../PageHeading";
+import { RiUser3Fill } from "@remixicon/react";
 
 const ProfileInfo = ({ user, isItMe }) => {
   const { username, profilePicture, name, bio } = user;
@@ -12,12 +13,19 @@ const ProfileInfo = ({ user, isItMe }) => {
           <div className=" bg-black flex px-4 py-5 gap-4">
             <div
               id="prof-img"
-              className=" bg-white rounded-full w-20 h-20 overflow-hidden"
+              className={`bg-[#D4D4D4] rounded-full w-20 h-20 overflow-hidden ${
+                !profilePicture && "flex pt-4"
+              } items-center justify-center`}
             >
-              <img
-                src={`${profilePicture}`}
-                className=" w-full object-cover object-center "
-              />
+              {profilePicture ? (
+                  <img
+                    src={`${profilePicture}`}
+                    className=" w-full object-cover object-center "
+                    alt=""
+                  />
+                ) : (
+                  <RiUser3Fill color="white" size={80} />
+                )}
             </div>
 
             <ProfileFollowSection user={user} isItMe={isItMe} />
@@ -39,12 +47,19 @@ const ProfileInfo = ({ user, isItMe }) => {
           <div className=" flex px-4 py-16 ">
             <div
               id="prof-img"
-              className=" bg-white rounded-full w-40 h-40 overflow-hidden"
+              className={`bg-[#D4D4D4] rounded-full w-40 h-40 overflow-hidden ${
+                !profilePicture && "flex"
+              } items- justify-center`}
             >
-              <img
-                src={`${profilePicture}`}
-                className=" w-full object-cover object-center "
-              />
+              {profilePicture ? (
+                  <img
+                    src={`${profilePicture}`}
+                    className=" w-full object-cover object-center "
+                    alt=""
+                  />
+                ) : (
+                  <RiUser3Fill color="white" size={185} />
+                )}
             </div>
           </div>
           <div

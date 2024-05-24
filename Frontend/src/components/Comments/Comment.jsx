@@ -6,6 +6,7 @@ import OneComment from "./OneComment";
 import { useSelector } from "react-redux";
 import InfiniteScroll from "react-infinite-scroll-component";
 import LoadingSpinner from "../LoadingSpinner";
+import { RiUser3Fill } from "@remixicon/react";
 
 const Comment = () => {
   const { userDetails } = useSelector((state) => state.user);
@@ -88,9 +89,21 @@ const Comment = () => {
 
           "
         >
-          <div className=" bg-blue-600 h-9 w-9 rounded-full overflow-hidden">
-            <img src={userDetails.profilePicture} className=" w-full" alt="" />
-          </div>
+          <div
+        className={`h-9 w-9 bg-[#D4D4D4] rounded-full overflow-hidden ${
+          !userDetails.profilePicture && "flex"
+        } items-end justify-center`}
+      >
+        {userDetails.profilePicture ? (
+          <img
+            src={`${userDetails.profilePicture}`}
+            className=" w-full object-cover object-center "
+            alt=""
+          />
+        ) : (
+          <RiUser3Fill color="white" size={30} />
+        )}
+      </div>
           <textarea
             value={comment}
             className=" bg-transparent w-60 py-1 border-none text-sm resize-none sm:w-80"

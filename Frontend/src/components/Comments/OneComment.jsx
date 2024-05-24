@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { RiMore2Fill } from "@remixicon/react";
+import { RiMore2Fill, RiUser3Fill } from "@remixicon/react";
 import Modal from "../Modal";
 import axios from "../../utils/axios";
 
@@ -17,7 +17,7 @@ const OneComment = ({ comment }) => {
     try {
       let response = await axios.delete(`/comment/${comment._id}`);
       console.log(response.data);
-      setClickedOn("")
+      setClickedOn("");
       setIsDeleted(true);
       return;
     } catch (error) {
@@ -28,15 +28,25 @@ const OneComment = ({ comment }) => {
   if (clickedOn === "Delete") handleDeleteComment();
   return (
     <div
-      className={` ${
-        isDeleted && "hidden"
-      } flex items-start  gap-3 ${isItMe && "justify-between"}`}
+      className={` ${isDeleted && "hidden"} flex items-start  gap-3 ${
+        isItMe && "justify-between"
+      }`}
     >
       <Link
         to={`/profile/${comment.owner.username}`}
-        className=" h-9 w-9 bg-blue-500 rounded-full overflow-hidden"
+        className={`h-9 w-9 bg-[#D4D4D4] rounded-full overflow-hidden ${
+          !comment.owner.profilePicture && "flex"
+        } items-end justify-center`}
       >
-        <img src={comment.owner.profilePicture} className=" w-full" alt="" />
+        {comment.owner.profilePicture ? (
+          <img
+            src={`${comment.owner.profilePicture}`}
+            className=" w-full object-cover object-center "
+            alt=""
+          />
+        ) : (
+          <RiUser3Fill color="white" size={30} />
+        )}
       </Link>
       <p className="  text-sm w-72 sm:w-[80%] overflow-hidden  text-wrap">
         <span className=" font-bold">{comment.owner.username} </span>

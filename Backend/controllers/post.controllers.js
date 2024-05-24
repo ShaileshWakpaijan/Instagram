@@ -117,11 +117,13 @@ const getAllFolloedPost = async (req, res, next) => {
     },
   ]);
 
-  allFollowedPosts = allFollowedPosts[0].posts;
-
+  allFollowedPosts = allFollowedPosts[0]?.posts;
+  
   let page = req.query.page || 1;
   let limit = req.query.limit || 1;
-
+  if (!allFollowedPosts)
+    return res.redirect(`/api/v1/post?limit=${limit}&page=${page}`);
+  
   let { startIndex, endIndex, isNext, isPrevious } = pagination(
     page,
     limit,

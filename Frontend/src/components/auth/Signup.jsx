@@ -12,7 +12,6 @@ const Signup = () => {
     setError("")
     try {
       let response = await axios.post("/user/verify-register", data);
-      console.log(response)
       if (response.data.verified) {
         navigate("/profile/setup", { state: { fromCurrentApp: true, data } });
       }

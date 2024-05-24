@@ -8,15 +8,19 @@ const Home = () => {
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const getHomePosts = async () => {
+    setLoading(true);
     try {
       let { data } = await axios.get(`/post/home?limit=4&page=${page}`);
       setPosts((prevData) => [...prevData, ...data.data.posts]);
       setPage((prev) => data.data.isNext && prev + 1);
       setHasMore(data.data.isNext);
+      setLoading(false);
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
   };
 
@@ -47,7 +51,7 @@ const Home = () => {
         </div>
       </div>
 
-      {posts.length && (
+      {posts.length ? (
         <div id="home-page">
           <InfiniteScroll
             dataLength={posts.length}
@@ -59,16 +63,14 @@ const Home = () => {
               </div>
             }
           >
-            {posts.length ? (
-              posts.map((post, index) => {
-                return <PostLayout postDetails={post} key={index} />;
-              })
-            ) : (
-              <div className=" relative py-8 sm:py-10">
-                <LoadingSpinner />
-              </div>
-            )}
+            {posts.map((post, index) => {
+              return <PostLayout postDetails={post} key={index} />;
+            })}
           </InfiniteScroll>
+        </div>
+      ) : (
+        <div className=" relative py-10">
+          <LoadingSpinner />
         </div>
       )}
     </div>

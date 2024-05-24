@@ -1,11 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
 import React, { useContext, useEffect, useState } from "react";
 import axios from "../../utils/axios";
-import { RiMore2Fill } from "@remixicon/react";
+import { RiMore2Fill, RiUser3Fill } from "@remixicon/react";
 import Modal from "../Modal";
 import { useSelector } from "react-redux";
 import useFollow from "../../hooks/useFollow";
 import { FlashMsgContext } from "../../context/FlashContext";
+import moment from "moment";
 
 const Post = ({ postDetails }) => {
   const [profilePicture, setProfilePicture] = useState("");
@@ -28,6 +29,9 @@ const Post = ({ postDetails }) => {
       console.log(error);
     }
   };
+
+  const postDate = moment(postDetails.createdAt);
+  const timeAgo = postDate.fromNow();
 
   const { userDetails } = useSelector((state) => state.user);
 
@@ -99,7 +103,7 @@ const Post = ({ postDetails }) => {
   useEffect(() => {
     if (postDetails) {
       setProfilePicture(
-        postDetails.owner.profilePicture.split("/upload").join("/upload/w_50")
+        postDetails.owner?.profilePicture?.split("/upload").join("/upload/w_50")
       );
       setLikesCount(postDetails.likesCount);
       setIsLiked(postDetails.isLiked);
@@ -116,11 +120,21 @@ const Post = ({ postDetails }) => {
             to={`/profile/${postDetails.owner.username}`}
             className=" flex items-center gap-4 w-fit"
           >
-            <img
-              className=" w-10 h-10 rounded-full object-cover object-center
-            "
-              src={profilePicture}
-            />
+            <div
+              className={` w-10 h-10 rounded-full  bg-[#D4D4D4] ${
+                !profilePicture && "flex"
+              } items-end justify-center`}
+            >
+              {profilePicture ? (
+                <img
+                  src={`${profilePicture}`}
+                  className=" w-full object-cover object-center "
+                  alt=""
+                />
+              ) : (
+                <RiUser3Fill color="white" size={30} />
+              )}
+            </div>
             <div className=" font-extrabold text-sm">
               {postDetails.owner.username}
             </div>
@@ -174,9 +188,7 @@ const Post = ({ postDetails }) => {
                 : "No comments"}
             </Link>
           </div>
-          <span className=" text-xs text-neutral-400">
-            {postDetails.createdAt}
-          </span>
+          <span className=" text-xs text-neutral-400">{timeAgo}</span>
         </div>
         <Modal
           isOpen={isOpen}

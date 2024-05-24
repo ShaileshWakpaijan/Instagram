@@ -130,7 +130,9 @@ const Profile = () => {
       </div>
     </div>
   ) : (
-    <p>Loading...</p>
+    <div className=" bg-black relative w-full h-screen">
+      <LoadingSpinner />
+    </div>
   );
 };
 
