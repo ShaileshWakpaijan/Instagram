@@ -38,7 +38,7 @@ const Signup = () => {
 
           <form
             action=""
-            className=" w-9/12 flex flex-col mt-12 gap-[5px] sm:w-2/5 sm:h-4/5 sm:border-2 sm:rounded-xl sm:border-black sm:px-7 sm:bg-stone-100 sm:justify-center "
+            className=" sm:text-[.8rem] w-9/12 flex flex-col mt-12 gap-[5px] sm:w-2/5 sm:h-4/5 sm:border-2 sm:rounded-xl sm:border-black sm:px-7 sm:bg-stone-100 sm:justify-center "
             onSubmit={handleSubmit((data) => handleRegister(data))}
           >
             <Input
