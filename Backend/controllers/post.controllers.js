@@ -5,6 +5,7 @@ const ApiResponse = require("../utils/ApiResponse");
 const ExpressError = require("../utils/ExpressError");
 const { uploadOnCloudinary } = require("../utils/cloudinary");
 const pagination = require("../utils/pagination");
+const fs = require("fs");
 
 const getAllFolloedPost = async (req, res, next) => {
   let allFollowedPosts = await Follow.aggregate([
@@ -255,6 +256,10 @@ const createPost = async (req, res, next) => {
     caption: req.body.caption,
     image: postImage,
     owner: req.user._id,
+  });
+
+  fs.unlink(req.file.path, (err) => {
+    console.log(err);
   });
 
   newPost = await newPost.save();
