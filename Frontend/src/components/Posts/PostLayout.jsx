@@ -30,7 +30,7 @@ const Post = ({ postDetails }) => {
     }
   };
 
-  const postDate = moment(postDetails.createdAt);
+  const postDate = moment(postDetails?.createdAt);
   const timeAgo = postDate.fromNow();
 
   const { userDetails } = useSelector((state) => state.user);
