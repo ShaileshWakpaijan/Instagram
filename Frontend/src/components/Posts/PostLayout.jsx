@@ -121,7 +121,7 @@ const Post = ({ postDetails }) => {
             className=" flex items-center gap-4 w-fit"
           >
             <div
-              className={` w-10 h-10 rounded-full  bg-[#D4D4D4] ${
+              className={` w-10 h-10 rounded-full overflow-hidden bg-[#D4D4D4] ${
                 !profilePicture && "flex"
               } items-end justify-center`}
             >

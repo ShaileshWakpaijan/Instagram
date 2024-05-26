@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import UserListItem from "../UserListItem";
 import PageHeading from "../PageHeading";
+import LoadingSpinner from '../LoadingSpinner'
 
 const FollowList = () => {
   const { state } = useLocation();
@@ -37,7 +38,9 @@ const FollowList = () => {
       </div>
     </div>
   ) : (
-    <h1 className=" bg-blue-500">Loading</h1>
+    <div className=" bg-black relative w-full h-screen">
+      <LoadingSpinner />
+    </div>
   );
 };
 

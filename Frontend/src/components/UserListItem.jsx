@@ -6,6 +6,7 @@ import useFollow from "../hooks/useFollow";
 import axios from "../utils/axios";
 import Modal from "./Modal";
 import { FlashMsgContext } from "../context/FlashContext";
+import { RiUser3Fill } from "@remixicon/react";
 
 const SearchResult = ({ user, fromSearch }) => {
   const [loading, setLoading] = useState(false);
@@ -43,8 +44,20 @@ const SearchResult = ({ user, fromSearch }) => {
   return (
     <div className=" flex justify-between items-center">
       <Link to={`/profile/${user.username}`} className=" flex gap-3">
-        <div className=" w-12 h-12 rounded-full bg-white overflow-hidden">
-          <img src={user.profilePicture} alt="" />
+        <div
+          className={`h-12 w-12 bg-[#D4D4D4] rounded-full overflow-hidden ${
+            !user.profilePicture && "flex pt-2"
+          } justify-center`}
+        >
+          {user.profilePicture ? (
+            <img
+              src={`${user.profilePicture}`}
+              className=" w-full object-cover object-center "
+              alt=""
+            />
+          ) : (
+            <RiUser3Fill color="white" size={45} />
+          )}
         </div>
         <div>
           <p>{user.username}</p>

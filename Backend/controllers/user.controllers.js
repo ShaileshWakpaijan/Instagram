@@ -72,7 +72,7 @@ const registerUser = async (req, res, next) => {
   const options = {
     httpOnly: true,
     secure: true,
-    sameSite: 'None',
+    sameSite: "None",
   };
 
   res
@@ -134,7 +134,7 @@ const loginUser = async (req, res, next) => {
   const options = {
     httpOnly: true,
     secure: true,
-    sameSite: 'None',
+    sameSite: "None",
   };
 
   res
@@ -158,7 +158,7 @@ const logoutUser = async (req, res) => {
   const options = {
     httpOnly: true,
     secure: true,
-    sameSite: 'None',
+    sameSite: "None",
   };
 
   res
@@ -187,8 +187,10 @@ const updateUser = async (req, res, next) => {
   if (req.file) {
     const response = await uploadOnCloudinary(req.file.path);
     req.body.profilePicture = response.url;
-    let imageArr = user.profilePicture.split("/");
-    await deleteOnCloudinary(imageArr[imageArr.length - 1].split(".")[0]);
+    if (user.profilePicture) {
+      let imageArr = user.profilePicture?.split("/");
+      await deleteOnCloudinary(imageArr[imageArr.length - 1].split(".")[0]);
+    }
   }
 
   let loggedInUser = await User.findByIdAndUpdate(
@@ -211,9 +213,6 @@ const deleteUser = async (req, res, next) => {
   if (!user._id.equals(req.user._id)) {
     next(new ExpressError(403, "You cannot edit others profile."));
   }
-
-  
-
 };
 
 const searchUsers = async (req, res, next) => {
@@ -620,5 +619,5 @@ module.exports = {
   getUserPosts,
   getAllLikedPost,
   getAllSavedPost,
-  deleteUser
+  deleteUser,
 };

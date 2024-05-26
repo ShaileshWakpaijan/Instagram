@@ -5,7 +5,6 @@ const ApiResponse = require("../utils/ApiResponse");
 const ExpressError = require("../utils/ExpressError");
 const { uploadOnCloudinary } = require("../utils/cloudinary");
 const pagination = require("../utils/pagination");
-const fs = require("fs");
 
 const getAllFolloedPost = async (req, res, next) => {
   let allFollowedPosts = await Follow.aggregate([
@@ -247,6 +246,7 @@ const createPost = async (req, res, next) => {
 
   let postImage;
   if (req.file) {
+    console.log(req.file)
     const response = await uploadOnCloudinary(req.file.path);
     if (!response) return next(new ExpressError(500, "Internal Server Error"));
     postImage = response.url;
@@ -256,10 +256,6 @@ const createPost = async (req, res, next) => {
     caption: req.body.caption,
     image: postImage,
     owner: req.user._id,
-  });
-
-  fs.unlink(req.file.path, (err) => {
-    console.log(err);
   });
 
   newPost = await newPost.save();

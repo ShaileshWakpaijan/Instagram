@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { userUpdate } from "../../store/actions/userAction";
 import LoadingSpinner from "../LoadingSpinner";
 import PageHeading from "../PageHeading";
-import {FlashMsgContext} from "../../context/FlashContext";
+import { FlashMsgContext } from "../../context/FlashContext";
 
 const EditPage = () => {
   const [loading, setLoading] = useState(false);
@@ -34,9 +34,9 @@ const EditPage = () => {
       response = response.data.data;
       dispatch(userUpdate(data.username));
       navigate(`/profile/${data.username}`);
-      showFlashMsg("Your profile update successfully.")
+      showFlashMsg("Your profile update successfully.");
     } catch (error) {
-      showFlashMsg(error.response.data.message)
+      showFlashMsg(error.response.data.message);
       console.log(error.response.data.message);
     }
     setLoading(false);
@@ -126,8 +126,9 @@ const EditPage = () => {
           />
 
           <button
+            disabled={loading}
             type="submit"
-            className=" w-fit bg-root px-4 py-2 mt-3 rounded-md text-sm relative"
+            className=" disabled:bg-gray-500 w-fit bg-root px-4 py-2 mt-3 rounded-md text-sm relative"
           >
             <span className={`${loading && "invisible"}`}>Submit</span>
             {loading && <LoadingSpinner />}
