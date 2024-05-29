@@ -45,14 +45,14 @@ const SearchResult = ({ user, fromSearch }) => {
     <div className=" flex justify-between items-center">
       <Link to={`/profile/${user.username}`} className=" flex gap-3">
         <div
-          className={`h-12 w-12 bg-[#D4D4D4] rounded-full overflow-hidden ${
+          className={` bg-[#D4D4D4] rounded-full overflow-hidden ${
             !user.profilePicture && "flex pt-2"
           } justify-center`}
         >
           {user.profilePicture ? (
             <img
               src={`${user.profilePicture}`}
-              className=" w-full object-cover object-center "
+              className=" h-12 w-12 rounded-full object-cover object-center "
               alt=""
             />
           ) : (

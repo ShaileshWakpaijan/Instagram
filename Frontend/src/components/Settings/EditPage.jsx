@@ -47,7 +47,7 @@ const EditPage = () => {
   }, []);
 
   return (
-    <div className=" min-h-screen bg-black">
+    <div className=" min-h-screen bg-black pb-16 sm:pb-0">
       <PageHeading heading={"Edit Profile"} />
       <div className="px-7">
         <h2 className=" text-2xl py-5">Edit profile</h2>
@@ -124,7 +124,6 @@ const EditPage = () => {
             id="bio"
             className=" py-1 px-3 rounded-md bg-transparent mb-3  border-[1px] border-neutral-600 resize-none"
           />
-
           <button
             disabled={loading}
             type="submit"

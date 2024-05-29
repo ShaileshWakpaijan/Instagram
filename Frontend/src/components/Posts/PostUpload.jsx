@@ -46,7 +46,7 @@ const PostUpload = () => {
   };
 
   return (
-    <div className=" min-h-screen w-full bg-black">
+    <div className=" min-h-screen w-full bg-black pb-16 sm:pb-0">
       <PageHeading heading={"Add Post"} />
       <form className=" w-full flex flex-col" onSubmit={handleSubmit}>
         <div htmlFor="postImage" className=" my-5">

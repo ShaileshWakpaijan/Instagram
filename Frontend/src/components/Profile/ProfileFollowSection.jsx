@@ -33,7 +33,7 @@ const ProfileFollowSection = ({ user, isItMe }) => {
     user && (
       <div
         id="follow-section"
-        className="flex flex-col justify-between sm:flex-row sm:justify-start sm:gap-3 sm:items-center"
+        className="flex flex-col gap-3 sm:flex-row sm:justify-start sm:gap-3 sm:items-center"
       >
         <div id="prof-username" className=" text-[1.1rem] font-bold">
           {user.username}
@@ -42,7 +42,7 @@ const ProfileFollowSection = ({ user, isItMe }) => {
         <div className=" flex gap-3">
           {isItMe ? (
             <Link to={"/profile/settings/edit"}>
-              <button className=" bg-[#1A1A1A] py-[.3rem] w-28 text-sm  font-bold rounded-md">
+              <button className=" bg-[#1A1A1A] py-[.3rem] w-[6.6rem] text-sm  font-bold rounded-md">
                 Edit Profile
               </button>
             </Link>
@@ -52,14 +52,14 @@ const ProfileFollowSection = ({ user, isItMe }) => {
                 !checkIsFollowing ? handleFollowBtn() : setIsOpen(true);
               }}
               className={` bg-${
-                checkIsFollowing ? "zinc-600" : "root"
-              } py-[.3rem] text-sm w-28 font-bold rounded-md relative`}
+                checkIsFollowing ? "stone-800" : "root"
+              } py-[.3rem] text-sm w-[6.6rem] font-bold rounded-md relative`}
             >
               {loading && <LoadingSpinner />}
               {!loading && (checkIsFollowing ? "Following" : "Follow")}
             </button>
           )}
-          <button className=" bg-root py-[.3rem]  w-24 sm:w-24 text-sm  font-bold rounded-md">
+          <button className=" bg-root py-[.3rem]  w-[5.8rem] sm:w-24 text-sm  font-bold rounded-md">
             Message
           </button>
         </div>

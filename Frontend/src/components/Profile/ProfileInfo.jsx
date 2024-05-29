@@ -10,17 +10,17 @@ const ProfileInfo = ({ user, isItMe }) => {
     user && (
       <>
         <div className=" sm:hidden">
-          <div className=" bg-black flex px-4 py-5 gap-4">
+          <div className=" bg-black flex pl-3 py-5 gap-3">
             <div
               id="prof-img"
-              className={`bg-[#D4D4D4] rounded-full w-20 h-20 overflow-hidden ${
+              className={`bg-[#D4D4D4] shrink-0 rounded-full overflow-hidden ${
                 !profilePicture && "flex pt-4"
               } items-center justify-center`}
             >
               {profilePicture ? (
                   <img
                     src={`${profilePicture}`}
-                    className=" w-full object-cover object-center "
+                    className=" w-20 h-20 rounded-full object-cover object-center "
                     alt=""
                   />
                 ) : (

@@ -34,7 +34,7 @@ const OneComment = ({ comment }) => {
     >
       <Link
         to={`/profile/${comment.owner.username}`}
-        className={`h-9 w-9 bg-[#D4D4D4] rounded-full overflow-hidden ${
+        className={`h-9 w-9 bg-[#D4D4D4] shrink-0 rounded-full overflow-hidden ${
           !comment.owner.profilePicture && "flex"
         } items-end justify-center`}
       >

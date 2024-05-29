@@ -4,6 +4,7 @@ import PostLayout from "./Posts/PostLayout";
 import axios from "../utils/axios";
 import InfiniteScroll from "react-infinite-scroll-component";
 import LoadingSpinner from "./LoadingSpinner";
+import { useSelector } from "react-redux";
 const Home = () => {
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
@@ -24,6 +25,8 @@ const Home = () => {
     }
   };
 
+  const { userDetails } = useSelector((state) => state.user);
+
   useEffect(() => {
     getHomePosts();
   }, []);
@@ -39,16 +42,18 @@ const Home = () => {
         id="home-story"
         className=" whitespace-nowrap overflow-x-auto bg-stone-900 py-1 px-5"
       >
-        <div className=" inline-block mr-3">
-          <img
-            className=" w-12 h-12 bg-blue-900 rounded-full overflow-hidden mx-auto"
-            src="/images/david.png"
-            alt=""
-          />
-          <p className=" mt-1 text-xs font-semibold w-full text-center">
-            Your story
-          </p>
-        </div>
+        {userDetails && (
+          <div className=" inline-block mr-3">
+            <img
+              className=" w-12 h-12 bg-blue-900 rounded-full overflow-hidden mx-auto"
+              src={userDetails.profilePicture}
+              alt=""
+            />
+            <p className=" mt-1 text-xs font-semibold w-full text-center">
+              Your story
+            </p>
+          </div>
+        )}
       </div>
 
       {posts.length ? (

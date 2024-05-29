@@ -18,7 +18,7 @@ const PostIndividual = () => {
   }, []);
 
   return (
-    <div className=" min-h-screen bg-black">
+    <div className=" min-h-screen bg-black pb-12 sm:pb-0">
       <PageHeading heading={"Post"} />
       <PostLayout postDetails={postDetails} />
     </div>
