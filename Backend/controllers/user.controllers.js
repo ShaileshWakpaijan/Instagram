@@ -106,14 +106,14 @@ const profSetUp = async (req, res, next) => {
 };
 
 const loginUser = async (req, res, next) => {
-  const { email, username, password } = req.body;
+  const { username, password } = req.body;
 
   if (!username) {
     if (!email) throw new ExpressError(400, "username or email is required");
   }
 
   const user = await User.findOne({
-    $or: [{ email }, { username }],
+    $or: [{ email: username }, { username }],
   });
 
   if (!user) return next(new ExpressError(404, "User does not exists."));
@@ -206,9 +206,6 @@ const updateUser = async (req, res, next) => {
 };
 
 const deleteUser = async (req, res, next) => {
-  if (!req.body.username)
-    return next(new ExpressError(400, "Username should not be empty."));
-
   let user = await User.findOne({ username: req.params.username });
   if (!user._id.equals(req.user._id)) {
     next(new ExpressError(403, "You cannot edit others profile."));

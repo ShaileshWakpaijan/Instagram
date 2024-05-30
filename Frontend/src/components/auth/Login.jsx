@@ -28,7 +28,7 @@ const Login = () => {
     setLoading(false);
     showFlashMsg("Login Successfully.");
     dispatch(loginAction(userDetails));
-    navigate(`/profile/${data.username}`);
+    navigate(`/profile/${userDetails.loggedInUser.username}`);
   };
 
   return (
@@ -52,13 +52,13 @@ const Login = () => {
             onSubmit={handleSubmit((data) => handleLogin(data))}
           >
             <Input
-              placeholder="Username"
+              placeholder="username or email"
               {...register("username")}
               className=" rounded-md bg-neutral-100 text-black border-[1px] border-gray-400 py-2 px-5"
             />
             <Input
               type="password"
-              placeholder="Password"
+              placeholder="password"
               {...register("password")}
               className=" rounded-md bg-neutral-100 text-black border-[1px] border-gray-400 py-2 px-5"
             />
