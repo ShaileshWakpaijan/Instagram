@@ -14,24 +14,24 @@ const ProfileInfo = ({ user, isItMe }) => {
             <div
               id="prof-img"
               className={`bg-[#D4D4D4] shrink-0 rounded-full overflow-hidden ${
-                !profilePicture && "flex pt-4"
+                !profilePicture && "flex pt-4 w-20 h-20"
               } items-center justify-center`}
             >
               {profilePicture ? (
-                  <img
-                    src={`${profilePicture}`}
-                    className=" w-20 h-20 rounded-full object-cover object-center "
-                    alt=""
-                  />
-                ) : (
-                  <RiUser3Fill color="white" size={80} />
-                )}
+                <img
+                  src={`${profilePicture}`}
+                  className=" w-20 h-20 rounded-full object-cover object-center "
+                  alt=""
+                />
+              ) : (
+                <RiUser3Fill color="white" size={80} />
+              )}
             </div>
 
             <ProfileFollowSection user={user} isItMe={isItMe} />
           </div>
           <div id="prof-bio" className=" bg-black w-full px-5 pb-4">
-            <p className=" font-bold text-[1.05rem]">{username}</p>
+            <p className=" font-bold text-[1.05rem]">{name}</p>
             <p className=" text-sm">{bio}</p>
           </div>
         </div>
@@ -52,14 +52,14 @@ const ProfileInfo = ({ user, isItMe }) => {
               } items- justify-center`}
             >
               {profilePicture ? (
-                  <img
-                    src={`${profilePicture}`}
-                    className=" w-full object-cover object-center "
-                    alt=""
-                  />
-                ) : (
-                  <RiUser3Fill color="white" size={185} />
-                )}
+                <img
+                  src={`${profilePicture}`}
+                  className=" rounded-full w-40 h-40 object-cover object-center "
+                  alt=""
+                />
+              ) : (
+                <RiUser3Fill color="white" size={185} />
+              )}
             </div>
           </div>
           <div

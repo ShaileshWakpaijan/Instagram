@@ -40,7 +40,7 @@ const Profile = () => {
   const fetchUserPosts = async () => {
     try {
       let { data } = await axios.get(
-        `/user/${params.username}/posts?limit=12&page=${page}`
+        `/user/${params.username}/posts?limit=15&page=${page}`
       );
       setUserPosts((prevData) => [...prevData, ...data.data.userPosts]);
       setPage((prev) => data.data.isNext && prev + 1);
@@ -58,75 +58,68 @@ const Profile = () => {
   }, [isItMe]);
 
   return user ? (
-    <div
-      id="profile-page"
-      className=" min-h-screen bg-black pb-12 text-white
-      sm:w-full sm:h-screen sm:overflow-y-auto
-      "
-    >
-      <div className=" sm:w-[72vw] lg:w-[48vw] sm:mx-auto">
-        <div className=" sticky z-30 top-0 w-full bg-black py-2 text-center border-b-[1px] border-neutral-600 sm:hidden">
-          <div className=" top-[50%] -translate-y-[50%] left-3 absolute">
-            {isItMe ? (
-              <Link to={"/profile/settings"}>
-                <RiSettingsLine />
-              </Link>
-            ) : (
-              <RiArrowLeftSLine onClick={() => navigate(-1)} />
-            )}
-          </div>
-          <span className="">{user.username}</span>
-        </div>
-
-        <ProfileInfo user={user} isItMe={isItMe} />
-        <div className=" sm:hidden">
-          <ProfileFollowInfo user={user} />
-        </div>
-
-        <div
-          id="prof-ops"
-          className="flex justify-around py-3 bg-black border-t-[1px] border-neutral-600"
-        >
-          <Link
-            to={`/profile/${user.username}`}
-            className=" w-1/3 flex justify-center items-center"
-          >
-            <RiLayoutGrid2Line size={27} />
-          </Link>
-
-          <Link
-            to={`/profile/${user.username}/feed`}
-            className=" w-1/3 flex justify-center items-center"
-          >
-            <RiScrollToBottomLine size={27} />
-          </Link>
-
-          {isItMe && (
-            <Link
-              to={`/profile/${user.username}/saved`}
-              className=" w-1/3 flex justify-center items-center"
-            >
-              <img className=" w-5 h-5" src="/Icons/saved.png" alt="" />
+    <div className="pb-16 sm:pb-5">
+      <div className=" sticky z-30 top-0 w-full bg-black py-2 text-center border-b-[1px] border-neutral-600 sm:hidden">
+        <div className=" top-[50%] -translate-y-[50%] left-3 absolute">
+          {isItMe ? (
+            <Link to={"/profile/settings"}>
+              <RiSettingsLine />
             </Link>
+          ) : (
+            <RiArrowLeftSLine onClick={() => navigate(-1)} />
           )}
         </div>
-        <div className="">
-          <InfiniteScroll
-            dataLength={userPosts.length}
-            next={fetchUserPosts}
-            hasMore={hasMore}
-            loader={
-              <div className=" relative py-8 sm:py-4">
-                <LoadingSpinner />
-              </div>
-            }
+        <span className="">{user.username}</span>
+      </div>
+
+      <ProfileInfo user={user} isItMe={isItMe} />
+      <div className=" sm:hidden">
+        <ProfileFollowInfo user={user} />
+      </div>
+
+      <div
+        id="prof-ops"
+        className="flex justify-around py-3 bg-black border-t-[1px] border-neutral-600"
+      >
+        <Link
+          to={`/profile/${user.username}`}
+          className=" w-1/3 flex justify-center items-center"
+        >
+          <RiLayoutGrid2Line size={27} />
+        </Link>
+
+        <Link
+          to={`/profile/${user.username}/feed`}
+          className=" w-1/3 flex justify-center items-center"
+        >
+          <RiScrollToBottomLine size={27} />
+        </Link>
+
+        {isItMe && (
+          <Link
+            to={`/profile/${user.username}/saved`}
+            className=" w-1/3 flex justify-center items-center"
           >
-            {pathname !== "feed" && pathname !== "saved" && (
-              <PostGrid userPosts={userPosts} />
-            )}
-          </InfiniteScroll>
-          <Outlet />
-        </div>
+            <img className=" w-5 h-5" src="/Icons/saved.png" alt="" />
+          </Link>
+        )}
+      </div>
+      <div className="">
+        <InfiniteScroll
+          dataLength={userPosts.length}
+          next={fetchUserPosts}
+          hasMore={hasMore}
+          loader={
+            <div className=" relative py-8 sm:py-4">
+              <LoadingSpinner />
+            </div>
+          }
+        >
+          {pathname !== "feed" && pathname !== "saved" && (
+            <PostGrid userPosts={userPosts} />
+          )}
+        </InfiniteScroll>
+        <Outlet />
       </div>
     </div>
   ) : (

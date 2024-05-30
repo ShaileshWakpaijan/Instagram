@@ -258,7 +258,18 @@ const searchUsers = async (req, res, next) => {
 
     users = users.map((user) => user[0]);
 
-    res.json(new ApiResponse(200, users));
+    let page = req.query.page || 1;
+    let limit = req.query.limit || 18;
+
+    let { startIndex, endIndex, isNext, isPrevious } = pagination(
+      page,
+      limit,
+      users
+    );
+
+    users = users.reverse().slice(startIndex, endIndex);
+
+    res.json(new ApiResponse(200, { page, users, isNext, isPrevious }));
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }

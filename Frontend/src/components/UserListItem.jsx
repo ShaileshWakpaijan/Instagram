@@ -45,7 +45,7 @@ const SearchResult = ({ user, fromSearch }) => {
     <div className=" flex justify-between items-center">
       <Link to={`/profile/${user.username}`} className=" flex gap-3">
         <div
-          className={` bg-[#D4D4D4] rounded-full overflow-hidden ${
+          className={`h-12 w-12 bg-[#D4D4D4] rounded-full overflow-hidden ${
             !user.profilePicture && "flex pt-2"
           } justify-center`}
         >
@@ -75,7 +75,7 @@ const SearchResult = ({ user, fromSearch }) => {
               !checkIsFollowing ? handleFollowBtn() : setIsOpen(true);
             }}
             className={` bg-${
-              checkIsFollowing ? "zinc-600" : "root"
+              checkIsFollowing ? "stone-800" : "root"
             } py-[.3rem] text-sm h-8 w-24 font-bold rounded-md relative ${
               user.username === userDetails.username && "hidden"
             }`}
