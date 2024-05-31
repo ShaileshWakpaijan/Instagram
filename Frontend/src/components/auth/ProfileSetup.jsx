@@ -14,6 +14,7 @@ const AddDetails = () => {
   const [preview, setPreview] = useState();
   const [profileimg, setProfileimg] = useState();
   const [loading, setLoading] = useState(false);
+  const [username, setUsername] = useState("");
   const nevigate = useNavigate();
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state) => state.user);
@@ -26,13 +27,18 @@ const AddDetails = () => {
   const { email, password, confirmPassword } = state.data;
   const { register, handleSubmit } = useForm();
 
+  const handleChangeUsername = (e) => {
+    let value = e.target.value.split(" ").join("_").toLowerCase();
+    setUsername(value);
+  };
+
   const handleFormSubmit = async (data) => {
     setLoading(true);
     let formData = new FormData();
     formData.append("profile", profileimg);
     formData.append("name", data.name);
     formData.append("bio", data.bio);
-    formData.append("username", data.username);
+    formData.append("username", username);
     formData.append("email", email);
     formData.append("password", password);
     formData.append("confirmPassword", confirmPassword);
@@ -43,15 +49,15 @@ const AddDetails = () => {
       setLoading(false);
       return;
     }
-    
+
     dispatch(loginAction(response));
-    nevigate(`/profile/${data.username}`);
+    nevigate(`/profile/${username}`);
     setLoading(false);
     showFlashMsg("Account created successfully.");
   };
 
   return state || isAuthenticated ? (
-    <div className=" min-h-screen bg-black sm:w-1/3 mx-auto">
+    <div className=" min-h-screen bg-black sm:w-3/5 lg:w-1/2 mx-auto">
       <div
         id="setting-top"
         className=" relative text-center py-2 border-b-[1px] border-neutral-600"
@@ -103,7 +109,8 @@ const AddDetails = () => {
             Username
           </label>
           <input
-            {...register("username")}
+            value={username}
+            onChange={handleChangeUsername}
             type="text"
             id="username"
             className=" py-1 px-3 rounded-md bg-transparent mb-3 border-[1px] border-neutral-600"

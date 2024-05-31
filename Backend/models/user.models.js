@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const Like = require("./like.model");
+const Save = require("./save.model");
+const Comment = require("./comment.model");
+const Follow = require("./follow.model");
+const Post = require("./post.model");
 
 const userSchema = new mongoose.Schema(
   {
@@ -76,6 +81,16 @@ userSchema.methods.generateRefreshToken = function () {
     }
   );
 };
+
+userSchema.post("findOneAndDelete", async (user) => {
+  await Like.deleteMany({ userId: user._id });
+  await Save.deleteMany({ userId: user._id });
+  await Comment.deleteMany({ owner: user._id });
+  await Post.deleteMany({ owner: user._id });
+  await Follow.deleteMany({
+    $or: [{ follower: user._id }, { following: user._id }],
+  });
+});
 
 const User = mongoose.model("User", userSchema);
 

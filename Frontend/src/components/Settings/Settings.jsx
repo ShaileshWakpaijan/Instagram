@@ -41,7 +41,7 @@ const Settings = () => {
           Liked Posts <RiArrowRightSLine className=" text-neutral-500" />
         </Link>
         <a href={`mailto:${import.meta.env.VITE_CONTACT_EMAIL}`} className=" p-3 border-b-[1px] border-neutral-600 flex items-center justify-between">
-          Contact Us (Email: {import.meta.env.VITE_CONTACT_EMAIL}) <RiArrowRightSLine className=" text-neutral-500" />
+          Contact Us <RiArrowRightSLine className=" text-neutral-500" />
         </a>
         <Link
           to={`/profile/${userDetails.username}/delete`}

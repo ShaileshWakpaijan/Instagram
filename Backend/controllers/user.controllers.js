@@ -88,23 +88,6 @@ const registerUser = async (req, res, next) => {
     );
 };
 
-const profSetUp = async (req, res, next) => {
-  let { name, bio } = req.body;
-
-  if (name.trim().length === 0 || name.trim().length === 0)
-    return next(new ExpressError(401, "Both fields are required"));
-
-  let user = await User.findByIdAndUpdate(req.user._id, {
-    name,
-    bio,
-    profilePicture,
-  });
-
-  res
-    .status(200)
-    .json(new ApiResponse(200, user, "Profile setup successfully."));
-};
-
 const loginUser = async (req, res, next) => {
   const { username, password } = req.body;
 
@@ -206,10 +189,32 @@ const updateUser = async (req, res, next) => {
 };
 
 const deleteUser = async (req, res, next) => {
-  let user = await User.findOne({ username: req.params.username });
-  if (!user._id.equals(req.user._id)) {
-    next(new ExpressError(403, "You cannot edit others profile."));
+  console.log("working");
+  if (req.params.username !== req.user.username) {
+    return next(new ExpressError(403, "You can't delete others account."));
   }
+  let user = req.user;
+  const isValidPassword = await user.isPasswordCorrect(req.body.password);
+
+  if (!isValidPassword) return next(new ExpressError(401, "Wrong password."));
+
+  user = await User.findOneAndDelete({ username: user.username });
+
+  if (!res) {
+    return next(new ExpressError(500, "Internal Server Error"));
+  }
+
+  const options = {
+    httpOnly: true,
+    secure: true,
+    sameSite: "None",
+  };
+
+  res
+    .status(200)
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", options)
+    .json({ message: "Account deleted successfully." });
 };
 
 const searchUsers = async (req, res, next) => {
@@ -618,7 +623,6 @@ const getAllSavedPost = async (req, res, next) => {
 module.exports = {
   validateRegisterUser,
   registerUser,
-  profSetUp,
   loginUser,
   logoutUser,
   searchUsers,

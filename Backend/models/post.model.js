@@ -25,15 +25,13 @@ const postSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-postSchema.post("findOneAndDelete", async (post) => {
+postSchema.post("deleteMany" || "findOneAndDelete", async (post) => {
   await Like.deleteMany({ postId: post._id });
   await Save.deleteMany({ postId: post._id });
   await Comment.deleteMany({ postId: post._id });
-  let imageArr = post.image.split("/");
-  const response = await deleteOnCloudinary(
-    imageArr[imageArr.length - 1].split(".")[0]
-  );
-  console.log(response);
+  let imageArr = post?.image?.split("/");
+  imageArr &&
+    (await deleteOnCloudinary(imageArr[imageArr?.length - 1]?.split(".")[0]));
 });
 
 const Post = mongoose.model("Post", postSchema);

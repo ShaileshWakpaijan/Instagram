@@ -16,13 +16,19 @@ const EditPage = () => {
   const dispatch = useDispatch();
   const { register, handleSubmit } = useForm();
   const { userDetails } = useSelector((state) => state.user);
+  const [username, setUsername] = useState(userDetails.username);
   const { showFlashMsg } = useContext(FlashMsgContext);
+  
+  const handleChangeUsername = (e) => {
+    let value = e.target.value.split(" ").join("_").toLowerCase();
+    setUsername(value);
+  };
 
   const handleFormSubmit = async (data) => {
     let formData = new FormData();
     setLoading(true);
     formData.append("profile", profileimg);
-    formData.append("username", data.username);
+    formData.append("username", username);
     formData.append("name", data.name);
     formData.append("bio", data.bio);
     try {
@@ -32,8 +38,8 @@ const EditPage = () => {
         { headers: { "Content-Type": "multipart/form-data" } }
       );
       response = response.data.data;
-      dispatch(userUpdate(data.username));
-      navigate(`/profile/${data.username}`);
+      dispatch(userUpdate(username));
+      navigate(`/profile/${username}`);
       showFlashMsg("Your profile update successfully.");
     } catch (error) {
       showFlashMsg(error.response.data.message);
@@ -108,8 +114,8 @@ const EditPage = () => {
             Username
           </label>
           <input
-            {...register("username")}
-            defaultValue={userDetails.username}
+            value={username}
+            onChange={handleChangeUsername}
             type="text"
             id="username"
             className=" py-1 px-3 rounded-md bg-transparent mb-3  border-[1px] border-neutral-600"

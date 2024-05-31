@@ -38,7 +38,7 @@ router
   .route("/:username/update")
   .patch(verifyJWT, upload.single("profile"), wrapAsync(updateUser));
 
-router.route("/:username/delete").patch(verifyJWT, deleteUser);
+router.route("/:username/delete").delete(verifyJWT, deleteUser);
 
 router.route("/search").get(verifyJWT, wrapAsync(searchUsers));
 
