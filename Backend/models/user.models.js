@@ -6,6 +6,7 @@ const Save = require("./save.model");
 const Comment = require("./comment.model");
 const Follow = require("./follow.model");
 const Post = require("./post.model");
+const { deleteOnCloudinary } = require("../utils/cloudinary");
 
 const userSchema = new mongoose.Schema(
   {
@@ -86,10 +87,19 @@ userSchema.post("findOneAndDelete", async (user) => {
   await Like.deleteMany({ userId: user._id });
   await Save.deleteMany({ userId: user._id });
   await Comment.deleteMany({ owner: user._id });
-  await Post.deleteMany({ owner: user._id });
   await Follow.deleteMany({
     $or: [{ follower: user._id }, { following: user._id }],
   });
+
+  let posts = await Post.find({ owner: user._id });
+
+  posts.map(async (post) => {
+    await Post.findOneAndDelete({ _id: post._id });
+  });
+
+  let imageArr = user?.profilePicture?.split("/");
+  imageArr &&
+    (await deleteOnCloudinary(imageArr[imageArr?.length - 1]?.split(".")[0]));
 });
 
 const User = mongoose.model("User", userSchema);

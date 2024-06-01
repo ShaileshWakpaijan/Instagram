@@ -138,8 +138,9 @@ const AddDetails = () => {
           />
 
           <button
-            type="submit"
-            className=" w-fit bg-root px-4 py-2 mt-3 rounded-md text-sm relative"
+            disabled={loading}
+              type="submit"
+              className=" disabled:bg-slate-400 w-fit bg-root px-4 py-2 mt-3 rounded-md text-sm relative"
           >
             <span className={`${loading && "invisible"}`}>Submit</span>
             {loading && <LoadingSpinner />}

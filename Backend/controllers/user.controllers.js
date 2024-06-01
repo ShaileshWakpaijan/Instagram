@@ -189,7 +189,6 @@ const updateUser = async (req, res, next) => {
 };
 
 const deleteUser = async (req, res, next) => {
-  console.log("working");
   if (req.params.username !== req.user.username) {
     return next(new ExpressError(403, "You can't delete others account."));
   }

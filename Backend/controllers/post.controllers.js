@@ -246,7 +246,6 @@ const createPost = async (req, res, next) => {
 
   let postImage;
   if (req.file) {
-    console.log(req.file)
     const response = await uploadOnCloudinary(req.file.path);
     if (!response) return next(new ExpressError(500, "Internal Server Error"));
     postImage = response.url;

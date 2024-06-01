@@ -25,7 +25,7 @@ const postSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-postSchema.post("deleteMany" || "findOneAndDelete", async (post) => {
+postSchema.post("findOneAndDelete", async (post) => {
   await Like.deleteMany({ postId: post._id });
   await Save.deleteMany({ postId: post._id });
   await Comment.deleteMany({ postId: post._id });
