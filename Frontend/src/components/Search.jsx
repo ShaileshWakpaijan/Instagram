@@ -1,5 +1,5 @@
 import { RiCloseCircleFill, RiSearch2Line } from "@remixicon/react";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import UserListItem from "./UserListItem";
 import axios from "../utils/axios";
 import LoadingSpinner from "./LoadingSpinner";
@@ -9,6 +9,7 @@ const Search = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState("");
+  const ref = useRef();
   const [users, setUsers] = useState([]);
   const handleChange = async (e) => {
     setLoading(true);
@@ -17,6 +18,10 @@ const Search = () => {
     setUsers(data.data.users);
     setLoading(false);
   };
+  useEffect(() => {
+    ref.current.focus();
+  }, []);
+
   return (
     <div className=" min-h-screen bg-black ">
       <div
@@ -31,6 +36,7 @@ const Search = () => {
         >
           <RiSearch2Line size={15} className=" text-neutral-400" />
           <input
+            ref={ref}
             value={query}
             onChange={handleChange}
             placeholder="Search"

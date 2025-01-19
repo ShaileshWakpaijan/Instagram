@@ -18,13 +18,20 @@ const EditPage = () => {
   const { userDetails } = useSelector((state) => state.user);
   const [username, setUsername] = useState(userDetails.username);
   const { showFlashMsg } = useContext(FlashMsgContext);
-  
+
   const handleChangeUsername = (e) => {
     let value = e.target.value.split(" ").join("_").toLowerCase();
     setUsername(value);
   };
+  const usernameRegex = /^[a-z0-9_.]{1,15}$/;
+  const testUsername = (username) => usernameRegex.test(username);
 
   const handleFormSubmit = async (data) => {
+    if (!testUsername(username)) {
+      showFlashMsg("Invalid Username");
+      console.log("Invalid Username");
+      return;
+    }
     let formData = new FormData();
     setLoading(true);
     formData.append("profile", profileimg);
@@ -70,7 +77,6 @@ const EditPage = () => {
               <img
                 id="profileImagePreview"
                 src={preview}
-                alt="profile-image"
                 className=" object-cover object-center"
               />
             </div>

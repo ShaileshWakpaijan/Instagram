@@ -32,7 +32,15 @@ const AddDetails = () => {
     setUsername(value);
   };
 
+  const usernameRegex = /^[a-z0-9_.]{1,15}$/;
+  const testUsername = (username) => usernameRegex.test(username);
+
   const handleFormSubmit = async (data) => {
+    if (!testUsername(username)) {
+      showFlashMsg("Invalid Username");
+      console.log("Invalid Username");
+      return;
+    }
     setLoading(true);
     let formData = new FormData();
     formData.append("profile", profileimg);
