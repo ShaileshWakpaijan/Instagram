@@ -51,6 +51,17 @@ const Login = () => {
             className=" sm:text-[.8rem] w-9/12 flex flex-col mt-12 gap-[5px] sm:w-2/5 sm:h-4/5 sm:border-2 sm:rounded-xl sm:border-black sm:px-7 sm:bg-stone-100 sm:justify-center "
             onSubmit={handleSubmit((data) => handleLogin(data))}
           >
+            <div className="bg-yellow-100 text-xs text-black mb-5 border border-black rounded-md px-3 py-2">
+              Explore <span className=" font-semibold">Inst-Pro-Max</span>
+              <br />
+              username: <span className=" font-semibold">guest_user</span>{" "}
+              <br />
+              password: <span className=" font-semibold">guest1234</span>
+              <br />
+              <br />
+              Note: You can't change username, password and can't delete this
+              account.
+            </div>
             <Input
               placeholder="username or email"
               {...register("username")}

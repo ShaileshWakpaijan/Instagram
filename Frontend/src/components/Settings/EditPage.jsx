@@ -27,6 +27,10 @@ const EditPage = () => {
   const testUsername = (username) => usernameRegex.test(username);
 
   const handleFormSubmit = async (data) => {
+    if (userDetails.username === "guest_user") {
+      navigate(`/profile/guest_user`);
+      return;
+    }
     if (!testUsername(username)) {
       showFlashMsg("Invalid Username");
       console.log("Invalid Username");

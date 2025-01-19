@@ -1,4 +1,5 @@
 import {
+  RiAccountBoxLine,
   RiArrowLeftSLine,
   RiLayoutGrid2Line,
   RiScrollToBottomLine,
@@ -56,19 +57,17 @@ const Profile = () => {
     setUserPosts([]);
     setPage(1);
     setHasMore(false);
-  
+
     dispatch(fetchUser(params.username));
     fetchUserPosts();
-  
-    const timeout = setTimeout(() => {
-    }, 0);
-  
+
+    const timeout = setTimeout(() => {}, 0);
+
     return () => {
       dispatch(removeUser());
       clearTimeout(timeout);
     };
   }, [params.username]);
-  
 
   return user ? (
     <div className="pb-16 sm:pb-5">
@@ -136,9 +135,21 @@ const Profile = () => {
           )}
           {isFeed && (
             <div className=" bg-black text-white">
-              {userPosts.map((post, index) => {
-                return <PostLayout key={index} postDetails={post} />;
-              })}
+              {userPosts.length ? (
+                userPosts.map((post, index) => {
+                  return <PostLayout key={index} postDetails={post} />;
+                })
+              ) : (
+                <div className=" w-full flex justify-center flex-col-reverse items-center h-60 bg-vilet-300">
+                  No Posts Yet
+                  <div className="hidden sm:block">
+                    <RiAccountBoxLine size={150} />
+                  </div>
+                  <div className="sm:hidden">
+                    <RiAccountBoxLine size={100} />
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </InfiniteScroll>

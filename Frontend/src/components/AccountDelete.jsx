@@ -15,6 +15,10 @@ const AccountDelete = () => {
   const { showFlashMsg } = useContext(FlashMsgContext);
 
   const handleDelete = async () => {
+    if (userDetails.username === "guest_user") {
+      showFlashMsg("Unable to delete guest_user");
+      return;
+    }
     try {
       const { data } = await axios.delete(
         `/user/${userDetails.username}/delete`,
