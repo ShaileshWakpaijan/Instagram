@@ -186,7 +186,18 @@ const logoutUser = async (req, res) => {
 };
 
 const updateUser = async (req, res, next) => {
-  if (!testUsername(username))
+  if (req.user.username === "guest_user")
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          { loggedInUser: req.user },
+          "Profile updated successfully."
+        )
+      );
+
+  if (!testUsername(req.body.username))
     return next(new ExpressError(400, "Invalid Username"));
 
   if (!req.body.username)
