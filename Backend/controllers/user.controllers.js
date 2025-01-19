@@ -8,6 +8,9 @@ const {
 } = require("../utils/cloudinary");
 const pagination = require("../utils/pagination");
 
+const usernameRegex = /^[a-z0-9_.]{1,15}$/;
+const testUsername = (username) => usernameRegex.test(username);
+
 const generatAccessAndRefresshTokens = async (userId) => {
   const user = await User.findById(userId);
 
@@ -32,11 +35,8 @@ const validateRegisterUser = async (req, res, next) => {
 const registerUser = async (req, res, next) => {
   const { username, email, password, name, bio } = req.body;
 
-  let profilePicture;
-  if (req.file) {
-    const response = await uploadOnCloudinary(req.file.path);
-    profilePicture = response.url;
-  }
+  if (!testUsername(username))
+    return next(new ExpressError(400, "Invalid Username"));
 
   if (!name) return next(new ExpressError(400, "Name should not be empty."));
 
@@ -51,6 +51,12 @@ const registerUser = async (req, res, next) => {
     return next(
       new ExpressError(409, "User with email/username already exists.")
     );
+
+  let profilePicture;
+  if (req.file) {
+    const response = await uploadOnCloudinary(req.file.path);
+    profilePicture = response.url;
+  }
 
   let user = await User.create({
     username,
@@ -159,7 +165,6 @@ const validateUserToken = async (req, res, next) => {
         "User Verified."
       )
     );
-
 };
 
 const logoutUser = async (req, res) => {
@@ -181,8 +186,14 @@ const logoutUser = async (req, res) => {
 };
 
 const updateUser = async (req, res, next) => {
+  if (!testUsername(username))
+    return next(new ExpressError(400, "Invalid Username"));
+
   if (!req.body.username)
     return next(new ExpressError(400, "Username should not be empty."));
+
+  if (!req.body.name)
+    return next(new ExpressError(400, "Name should not be empty."));
 
   let user = await User.findOne({ username: req.params.username });
   if (!user._id.equals(req.user._id)) {
@@ -660,5 +671,5 @@ module.exports = {
   getAllLikedPost,
   getAllSavedPost,
   deleteUser,
-  validateUserToken
+  validateUserToken,
 };
