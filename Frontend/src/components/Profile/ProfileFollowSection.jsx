@@ -59,9 +59,9 @@ const ProfileFollowSection = ({ user, isItMe }) => {
               {!loading && (checkIsFollowing ? "Following" : "Follow")}
             </button>
           )}
-          <button className=" bg-root py-[.3rem]  w-[5.8rem] sm:w-24 text-sm  font-bold rounded-md">
+          {!isItMe && <button className=" bg-root py-[.3rem]  w-[5.8rem] sm:w-24 text-sm  font-bold rounded-md">
             Message
-          </button>
+          </button>}
         </div>
         <Modal
           isOpen={isOpen}

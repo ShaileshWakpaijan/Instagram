@@ -7,6 +7,7 @@ import {
 import React, { useEffect, useState } from "react";
 import ProfileInfo from "./ProfileInfo";
 import ProfileFollowInfo from "./ProfileFollowInfo";
+import PostLayout from "../Posts/PostLayout";
 import PostGrid from "../Posts/PostGrid";
 import {
   Link,
@@ -32,6 +33,7 @@ const Profile = () => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const [userPosts, setUserPosts] = useState([]);
+  const [isFeed, setIsFeed] = useState(false);
 
   const { user, userDetails } = useSelector((state) => state.user);
 
@@ -39,23 +41,34 @@ const Profile = () => {
 
   const fetchUserPosts = async () => {
     try {
-      let { data } = await axios.get(
+      const { data } = await axios.get(
         `/user/${params.username}/posts?limit=15&page=${page}`
       );
       setUserPosts((prevData) => [...prevData, ...data.data.userPosts]);
-      setPage((prev) => data.data.isNext && prev + 1);
       setHasMore(data.data.isNext);
+      if (data.data.isNext) setPage((prev) => prev + 1);
     } catch (err) {
       console.log(err);
     }
   };
 
   useEffect(() => {
+    setUserPosts([]);
+    setPage(1);
+    setHasMore(false);
+  
     dispatch(fetchUser(params.username));
     fetchUserPosts();
-
-    return () => dispatch(removeUser());
-  }, [isItMe]);
+  
+    const timeout = setTimeout(() => {
+    }, 0);
+  
+    return () => {
+      dispatch(removeUser());
+      clearTimeout(timeout);
+    };
+  }, [params.username]);
+  
 
   return user ? (
     <div className="pb-16 sm:pb-5">
@@ -83,13 +96,15 @@ const Profile = () => {
       >
         <Link
           to={`/profile/${user.username}`}
+          onClick={() => setIsFeed(false)}
           className=" w-1/3 flex justify-center items-center"
         >
           <RiLayoutGrid2Line size={27} />
         </Link>
 
         <Link
-          to={`/profile/${user.username}/feed`}
+          to={`/profile/${user.username}`}
+          onClick={() => setIsFeed(true)}
           className=" w-1/3 flex justify-center items-center"
         >
           <RiScrollToBottomLine size={27} />
@@ -97,6 +112,7 @@ const Profile = () => {
 
         {isItMe && (
           <Link
+            onClick={() => setIsFeed(false)}
             to={`/profile/${user.username}/saved`}
             className=" w-1/3 flex justify-center items-center"
           >
@@ -115,11 +131,18 @@ const Profile = () => {
             </div>
           }
         >
-          {pathname !== "feed" && pathname !== "saved" && (
+          {!isFeed && pathname !== "saved" && (
             <PostGrid userPosts={userPosts} />
           )}
+          {isFeed && (
+            <div className=" bg-black text-white">
+              {userPosts.map((post, index) => {
+                return <PostLayout key={index} postDetails={post} />;
+              })}
+            </div>
+          )}
         </InfiniteScroll>
-        <Outlet />
+        {pathname === "saved" && <Outlet />}
       </div>
     </div>
   ) : (

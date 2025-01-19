@@ -18,7 +18,7 @@ const Settings = () => {
     dispatch(setUserDetails(null));
     dispatch(setAuthentication(false));
     dispatch(setAccessToken(null));
-    navigate("/login");
+    // navigate("/login");
   };
 
   const { userDetails } = useSelector((state) => state.user);
@@ -49,12 +49,13 @@ const Settings = () => {
         >
           Delete Account <RiArrowRightSLine className=" text-neutral-500" />
         </Link>
-        <li
+        <a
+          href="/login"
           onClick={handleClick}
           className=" cursor-pointer p-3 border-b-[1px] border-neutral-600 flex items-center justify-between text-red-500"
         >
           Log Out <RiArrowRightSLine className=" text-neutral-500" />
-        </li>
+        </a>
       </ul>
     </div>
   );

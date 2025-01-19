@@ -5,7 +5,6 @@ import {
   Explore,
   Login,
   Profile,
-  ProfileFeed,
   Search,
   Settings,
   Signup,
@@ -16,23 +15,19 @@ import {
   PostSaved,
   Home,
   PostLiked,
-  AccountDelete
-
+  AccountDelete,
 } from "../pages/index";
 import ProfileSetup from "../pages/ProfileSetup";
 import ProtectedRoutes from "./ProtectedRoutes";
-import { useSelector } from "react-redux";
 
 const Router = () => {
-  const { isAuthenticated } = useSelector((state) => state.user);
   return (
     <div>
       <Routes>
-        <Route element={<ProtectedRoutes isAuthenticated={isAuthenticated} />}>
+        <Route element={<ProtectedRoutes />}>
           <Route path="/" element={<Home />} />
           <Route path="/home" element={<Home />} />
           <Route path="/profile/:username" element={<Profile />}>
-            <Route path="/profile/:username/feed" element={<ProfileFeed />} />
             <Route path="/profile/:username/saved" element={<PostSaved />} />
           </Route>
           <Route path="/profile/:username/followers" element={<FollowList />} />

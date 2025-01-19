@@ -5,13 +5,24 @@ import PostGrid from "./PostGrid";
 import { RiAccountBoxLine } from "@remixicon/react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import LoadingSpinner from "../LoadingSpinner";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const PostSaved = () => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const { userDetails } = useSelector((state) => state.user);
   const [savedPosts, setSavedPosts] = useState([]);
+  const navigate = useNavigate();
+
+  let { pathname } = useLocation();
+  pathname = pathname.split("/");
+  let currentUsername = pathname[pathname.length - 2];
+
   const getSavedPosts = async () => {
+    if (currentUsername !== userDetails.username) {
+      navigate(`/profile/${currentUsername}`);
+      return;
+    }
     try {
       const { data } = await axios.get(
         `user/${userDetails.username}/saved?limit=12&page=${page}`
