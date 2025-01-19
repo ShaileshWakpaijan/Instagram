@@ -19,6 +19,7 @@ import {
 } from "../pages/index";
 import ProfileSetup from "../pages/ProfileSetup";
 import ProtectedRoutes from "./ProtectedRoutes";
+import AuthProtection from "./AuthProtection";
 
 const Router = () => {
   return (
@@ -42,9 +43,11 @@ const Router = () => {
           <Route path="/search" element={<Search />} />
           <Route path="/explore" element={<Explore />} />
         </Route>
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/profile/setup" element={<ProfileSetup />} />
+        <Route element={<AuthProtection />}>
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/profile/setup" element={<ProfileSetup />} />
+        </Route>
       </Routes>
     </div>
   );

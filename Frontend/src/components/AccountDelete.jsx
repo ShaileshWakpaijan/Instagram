@@ -1,15 +1,17 @@
 import React, { useContext, useState } from "react";
 import PageHeading from "./PageHeading";
 import axios from "../utils/axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { FlashMsgContext } from "../context/FlashContext";
+import { setAuthentication } from "../store/reducers/userSlice";
 
 const AccountDelete = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const { userDetails } = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { showFlashMsg } = useContext(FlashMsgContext);
 
   const handleDelete = async () => {
@@ -20,6 +22,7 @@ const AccountDelete = () => {
           data: { password },
         }
       );
+      dispatch(setAuthentication(false));
       console.log(data.message);
       showFlashMsg(data.message);
       navigate("/login");

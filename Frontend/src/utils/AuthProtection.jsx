@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, Outlet } from "react-router-dom";
 import { setAuthentication } from "../store/reducers/userSlice";
-import axios from "../utils/axios";
+import axios from "./axios";
 import { loginAction } from "../store/actions/userAction";
 
-const ProtectedRoutes = () => {
+const AuthProtection = () => {
   const { isAuthenticated } = useSelector((state) => state.user);
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
@@ -41,11 +41,11 @@ const ProtectedRoutes = () => {
     );
   }
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" />;
+  if (isAuthenticated) {
+    return <Navigate to="/home" />;
   }
 
   return <Outlet />;
 };
 
-export default ProtectedRoutes;
+export default AuthProtection;
