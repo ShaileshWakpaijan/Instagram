@@ -133,6 +133,35 @@ const loginUser = async (req, res, next) => {
     );
 };
 
+const validateUserToken = async (req, res, next) => {
+  const { accessToken, refreshToken } = await generatAccessAndRefresshTokens(
+    req.user._id
+  );
+
+  const loggedInUser = await User.findById(req.user._id).select(
+    "-password -refreshToken"
+  );
+
+  const options = {
+    httpOnly: true,
+    secure: true,
+    sameSite: "None",
+  };
+
+  res
+    .status(200)
+    .cookie("accessToken", accessToken, options)
+    .cookie("refreshToken", refreshToken, options)
+    .json(
+      new ApiResponse(
+        200,
+        { loggedInUser, accessToken, refreshToken },
+        "User Verified."
+      )
+    );
+
+};
+
 const logoutUser = async (req, res) => {
   const user = await User.findByIdAndUpdate(req.user._id, {
     $set: { refreshToken: undefined },
@@ -631,4 +660,5 @@ module.exports = {
   getAllLikedPost,
   getAllSavedPost,
   deleteUser,
+  validateUserToken
 };

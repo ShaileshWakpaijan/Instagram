@@ -16,6 +16,7 @@ const {
   getUserPosts,
   getAllSavedPost,
   deleteUser,
+  validateUserToken,
 } = require("../controllers/user.controllers");
 
 const { verifyJWT } = require("../middlewares/Auth.middlewares");
@@ -31,6 +32,8 @@ router
   .post(upload.single("profile"), wrapAsync(registerUser));
 
 router.route("/login").post(validateLogin, wrapAsync(loginUser));
+
+router.route("/validate-user").get(verifyJWT, wrapAsync(validateUserToken));
 
 router.route("/logout").post(verifyJWT, wrapAsync(logoutUser));
 
